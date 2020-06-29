@@ -1,11 +1,10 @@
+
 import socket
 import os
 import time
 import json
 import cursor
 
-HOST = '127.0.0.1'
-PORT = 5002
 
 niceValue = os.nice(10)
 print('niceValue:',niceValue)
