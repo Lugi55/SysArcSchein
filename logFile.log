@@ -1,0 +1,99 @@
+2020-07-03 22:09:08,571 LoggerTask started
+2020-07-03 22:09:08,572 niceValue:10
+2020-07-03 22:09:54,809 ddddddddddddddddddddddddddddddddddddddddddddddddddd
+2020-07-03 22:11:26,933 GUITask start
+2020-07-03 22:11:26,934 GUITask:	niceValue:10
+2020-07-03 22:16:03,553 SensorTask
+
+start
+2020-07-03 22:16:03,554 SensorTask
+
+iceValue:10
+2020-07-03 22:17:09,029 SensorTask		start
+2020-07-03 22:17:09,030 SensorTask		iceValue:10
+2020-07-03 22:18:47,323 SensorTask		start
+2020-07-03 22:18:47,324 SensorTask		iceValue:10
+2020-07-03 22:18:48,431 SensorTask		LoggerTask execution Ctrl+C
+2020-07-03 22:19:16,204 SensorTask		start
+2020-07-03 22:19:16,205 SensorTask		iceValue:10
+2020-07-03 22:19:16,558 SensorTask		LoggerTask execution Ctrl+C
+2020-07-03 22:26:07,988 GUITask		start
+2020-07-03 22:26:07,989 GUITask:		niceValue:10
+2020-07-03 22:26:11,314 GUITask		start
+2020-07-03 22:26:11,315 GUITask:		niceValue:10
+2020-07-03 22:26:33,416 LoggerTask		start
+2020-07-03 22:26:33,417 LoggerTask		niceValue:0
+2020-07-03 22:26:33,442 LoggerTask	\Subscribed to SensorTask
+2020-07-03 22:44:53,797 GUITask		start
+2020-07-03 22:44:53,798 GUITask:		niceValue:10
+2020-07-03 22:44:53,839 GUITask		Subscribed to SensorTask
+2020-07-03 22:45:09,277 SensorTask		start
+2020-07-03 22:45:09,278 SensorTask		iceValue:10
+2020-07-03 22:45:13,545 GUITask		start
+2020-07-03 22:45:13,546 GUITask:		niceValue:10
+2020-07-03 22:45:13,587 GUITask		Subscribed to SensorTask
+2020-07-03 22:45:37,900 GUITask		start
+2020-07-03 22:45:37,902 GUITask:		niceValue:10
+2020-07-03 22:45:37,945 GUITask		Subscribed to SensorTask
+2020-07-03 22:45:49,384 GUITask		start
+2020-07-03 22:45:49,385 GUITask:		niceValue:10
+2020-07-03 22:45:49,430 GUITask		Subscribed to SensorTask
+2020-07-03 22:46:21,153 GUITask		start
+2020-07-03 22:46:21,154 GUITask:		niceValue:10
+2020-07-03 22:46:21,194 GUITask		Subscribed to SensorTask
+2020-07-03 22:46:27,848 GUITask		start
+2020-07-03 22:46:27,849 GUITask:		niceValue:10
+2020-07-03 22:46:27,890 GUITask		Subscribed to SensorTask
+2020-07-03 22:47:46,606 GUITask		start
+2020-07-03 22:47:46,607 GUITask:		niceValue:10
+2020-07-03 22:47:46,651 GUITask		Subscribed to SensorTask
+2020-07-03 22:47:51,265 GUITask		start
+2020-07-03 22:47:51,266 GUITask:		niceValue:10
+2020-07-03 22:47:51,308 GUITask		Subscribed to SensorTask
+2020-07-03 22:48:19,311 GUITask		start
+2020-07-03 22:48:19,312 GUITask:		niceValue:10
+2020-07-03 22:48:19,354 GUITask		Subscribed to SensorTask
+2020-07-03 22:50:26,155 GUITask		start
+2020-07-03 22:50:26,156 GUITask:		niceValue:10
+2020-07-03 22:50:26,197 GUITask		Subscribed to SensorTask
+2020-07-03 22:50:39,960 LoggerTask		Ctrl+C
+2020-07-03 22:52:32,266 SensorTask		LoggerTask execution Ctrl+C
+2020-07-03 22:58:03,329 GUITask		start
+2020-07-03 22:58:03,330 GUITask		niceValue:10
+2020-07-03 22:58:03,370 GUITask		Subscribed to SensorTask
+2020-07-03 23:01:11,287 GUITask		start
+2020-07-03 23:01:11,288 GUITask		niceValue:10
+2020-07-03 23:01:37,824 GUITask		start
+2020-07-03 23:01:37,825 GUITask		niceValue:10
+2020-07-03 23:02:46,121 GUITask		start
+2020-07-03 23:02:46,122 GUITask		niceValue:10
+2020-07-03 23:03:32,750 GUITask		start
+2020-07-03 23:03:32,751 GUITask		niceValue:10
+2020-07-03 23:04:01,910 GUITask		start
+2020-07-03 23:04:01,911 GUITask		niceValue:10
+2020-07-03 23:04:20,272 GUITask		start
+2020-07-03 23:04:20,273 GUITask		niceValue:10
+2020-07-03 23:05:29,320 GUITask		start
+2020-07-03 23:05:29,321 GUITask		niceValue:10
+2020-07-03 23:05:30,638 GUITask		Subscribed to SensorTask
+2020-07-03 23:06:07,647 SensorTask		start
+2020-07-03 23:06:07,648 SensorTask		iceValue:10
+2020-07-03 23:06:17,640 GUITask		start
+2020-07-03 23:06:17,641 GUITask		niceValue:10
+2020-07-03 23:06:19,456 GUITask		Subscribed to SensorTask
+2020-07-03 23:07:06,828 GUITask		start
+2020-07-03 23:07:06,829 GUITask		niceValue:10
+2020-07-03 23:07:08,456 GUITask		Subscribed to SensorTask
+2020-07-03 23:07:31,600 SensorTask		LoggerTask execution Ctrl+C
+2020-07-03 23:08:04,748 GUITask		start
+2020-07-03 23:08:04,749 GUITask		niceValue:10
+2020-07-03 23:08:08,194 GUITask		Subscribed to SensorTask
+2020-07-03 23:08:16,691 SensorTask		start
+2020-07-03 23:08:16,693 SensorTask		iceValue:10
+2020-07-03 23:09:54,563 GUITask		start
+2020-07-03 23:09:54,564 GUITask		niceValue:10
+2020-07-03 23:09:55,908 GUITask		Subscribed to SensorTask
+2020-07-04 12:35:24,276 GUITask		start
+2020-07-04 12:35:24,277 GUITask		niceValue:10
+2020-07-04 12:35:53,676 SensorTask		start
+2020-07-04 12:35:53,677 SensorTask		niceValue:10

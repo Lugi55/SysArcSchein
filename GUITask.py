@@ -1,71 +1,83 @@
-
-import socket
+import paho.mqtt.client as paho
 import os
 import time
 import json
-import cursor
+import curses
+import sys
+import logging
 
+
+
+def GUI(stdscr):
+	menu = ['View Sensor Data', 'View Temperautre Topic', 'Scoreboard', 'Exit']
+	def updateMenu(current_row):
+		for idx, element in enumerate(menu):
+			if idx == current_row:
+				stdscr.attron(curses.color_pair(1))
+				stdscr.addstr(idx+1,1,element)
+				stdscr.attroff(curses.color_pair(1))
+			else:
+				stdscr.addstr(idx+1,1,element)
+
+	stdscr.clear()
+	curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+	curses.curs_set(0)
+	current_row=0
+	updateMenu(current_row)
+	while 1:
+		key = stdscr.getch()
+		if key == curses.KEY_UP and current_row > 0:
+			current_row -= 1
+		elif key == curses.KEY_DOWN and current_row < len(menu)-1:
+			current_row += 1
+		elif key == curses.KEY_ENTER or key in [10, 13]:
+			if current_row == menu.index('Exit'):
+				return 'Exit'
+			if curren_row == menu.index('View Sensor Data')
+				return 'View Sensor Data'
+		updateMenu(current_row)
+
+
+
+#init logging module
+logging.basicConfig(filename='logFile.log',format='%(asctime)s %(message)s',level=logging.DEBUG)
+logging.info('GUITask\t\tstart')
 
 niceValue = os.nice(10)
-print('niceValue:',niceValue)
+logging.info('GUITask\t\tniceValue:%s',niceValue)
 
 
-serverAdress = './TMP/GUI_socket'
-
-try:
-	os.unlink(serverAdress)
-except:
-	if os.path.exists(serverAdress):
-		raise
-
-sock = socket.socket(socket.AF_UNIX, socket.SOCK_DGRAM)
-sock.bind(serverAdress)
-print('wait for socket connection')
-
-os.system('clear')
-cursor.hide()
-
-def move(y,x):
-	print('\033[%d;%dH' % (y,x))
-
-while True:
-	os.system('clear')
-	print('Menu')
-	print('start gui [y/n]')
-	userInput = input()
+def on_subscribe(client, userdata, mid, granted_qos):
+	logging.info('GUITask\t\tSubscribed to SensorTask')
+def on_message(client, userdata, msg):
+	dict = json.loads(msg.payload.decode('utf-8'))
 
 
-	if userInput == 'y' or 'Y':
-		os.system('clear')
-		oldtime = 0
-		drift = 0
-		init = True
-		run = True
-		try:
-			while True:
-				data = sock.recv(1024)
-				dict = json.loads(data.decode('utf-8'))
-				dt = float(dict['timestemp'])-oldtime
-				oldtime = float(dict['timestemp'])
-				gitter = 0.1-dt
-				drift += gitter
-				if init:
-					drift = 0
-					gitter = 0
-					dt = 0
-					init = False
-				move(1,1)
-				print('temperature:\t %3.2f'%float(dict['temperature']))
-				print('timestemp:\t %15.9f'%float(dict['timestemp']))
-				print('dt:\t\t %1.9f'%dt)
-				if gitter>0:
-	 				print('gitter:\t\t %1.9f'%gitter)
-				else:
-					print('gitter:\t\t%1.9f'%gitter)
-				if drift>0:
-					print('drift:\t\t %1.9f'%drift)
-				else:
-					print('drift:\t\t%1.9f'%drift)
-				print('\nto go back Ctrl+c')
-		except KeyboardInterrupt:
-			pass
+#init MQTT Client
+client = paho.Client()
+client.on_message = on_message
+client.on_subscribe = on_subscribe
+client.connect(host='localhost',port= 1883)
+client.subscribe('SensorTask/Temperature', qos=0)
+
+#start GUI blocking
+reply = curses.wrapper(GUI)
+print(print)
+if(reply == '')
+	pass
+elseif()
+
+client.loop_start()
+bla bla
+bla bla
+client.loop_stop()
+
+
+client.loop_forever()
+
+
+
+
+
+
+
