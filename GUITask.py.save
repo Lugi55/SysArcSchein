@@ -51,10 +51,9 @@ def on_subscribe(client, userdata, mid, granted_qos):
 	logging.info('GUITask\t\tSubscribed to SensorTask')
 def on_message(client, userdata, msg):
 	dict = json.loads(msg.payload.decode('utf-8'))
-	if disp: print(dict)
+	if raw: print(dict)
+	if disp: print()
 
-
-disp = False
 
 while True:
 	#start GUI blocking
@@ -68,9 +67,9 @@ while True:
 		client.connect(host='localhost',port= 1883)
 		client.subscribe('SensorTask/Temperature', qos=0)
 		client.loop_start()
-		disp = True
+		raw = True
 		input()
-		disp = False
+		raw = False
 		client.loop_stop()
 
 
