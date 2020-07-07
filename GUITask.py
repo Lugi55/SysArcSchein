@@ -34,6 +34,9 @@ def GUI(stdscr):
         'options': [
             { 'title': "Back", 'type': COMMAND, 'command': 'BACK' },
             { 'title': "View Temperature Topic", 'type': COMMAND, 'command': 'View Temperature Topic' },
+            { 'title': "View Temperature Topic", 'type': COMMAND, 'command': 'View Temperature Topic' },
+            { 'title': "View Temperature Topic", 'type': COMMAND, 'command': 'View Temperature Topic' },
+            { 'title': "View Temperature Topic", 'type': COMMAND, 'command': 'View Temperature Topic' },
             { 'title': "Exit", 'type': COMMAND, 'command':"Exit"  }, 
         ] 
         },
