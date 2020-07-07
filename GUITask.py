@@ -55,7 +55,9 @@ def GUI(stdscr):
     
     def updateMenu(current_row, menu_var, parent_var=None):
         global menu
-        menu = menu_var
+        if menu != menu_var:
+            menu = menu_var
+            current_row = 0
         if parent_var:
             global parent
             parent.append(parent_var)
@@ -103,11 +105,7 @@ def GUI(stdscr):
                 # ... pfusch
                 if int(round(time.time() * 1000)) - time_parent > 10:
                     updateMenu(current_row, menu['options'][current_row], menu) # display the submenu
-        else:
-            pass
-
-
-
+                    current_row = 0
 
 
 
