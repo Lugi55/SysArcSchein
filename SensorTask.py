@@ -30,8 +30,8 @@ def main():
 	while True:
 		temperature = vcgm.measure_temp()
 		temperature = str(temperature)
-		timestemp = str(time.time())
-		dict = {'timestemp':timestemp,'temperature':temperature}
+		timestamp = str(time.time())
+		dict = {'timestamp':timestamp,'temperature':temperature}
 		client.publish('SensorTask/Temperature', json.dumps(dict), qos = 0)
 		next_call = next_call+0.1
 		time.sleep(next_call - time.time())
