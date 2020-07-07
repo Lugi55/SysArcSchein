@@ -24,7 +24,7 @@ def main():
 		global file
 		global currentNumberOfLogs
 		currentNumberOfLogs += 1
-		if currenNumberOfLogs > numberOfLogsPerFile:
+		if currentNumberOfLogs > numberOfLogsPerFile:
 			file = createNewLoggerFile()
 			logging.info('LoggerTask\t\tnew Log file has been created')
 	def on_temperature_message(client, userdata, msg):
@@ -44,8 +44,8 @@ def main():
 	signal.signal(signal.SIGINT, signalHandler)
 
 	#define LoggerFile size
-	numberOfLogsPerFile = 100000;
-	currentNumberOfLogs = 0;
+	numberOfLogsPerFile = 100000
+	currentNumberOfLogs = 0
 
 	#init first file
 	file = createNewLoggerFile()
