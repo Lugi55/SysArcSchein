@@ -7,7 +7,6 @@ import logging
 import signal
 import sys
 
-
 def main():
 	#init logging module
 	logging.basicConfig(filename='logFile.log',format='%(asctime)s %(message)s',level=logging.DEBUG)
@@ -39,10 +38,12 @@ class Logger():
 		self.client.connect(host='localhost',port= 1883)
 		self.client.subscribe('SensorTask/#', qos=0)
 
+		#create first fileTime
+		self.currentFileTime = datetime.datetime.now().replace(microsecond=0,second=0,minute=0)
 
 	#new Logger File
 	def createNewLoggerFile(self):
-		self.fileName = datetime.datetime.now().strftime("%Y-%m-%d_%H.log")
+		self.fileName = datetime.datetime.now().replace(microsecond=0, second=0, minute=0).strftime("%Y-%m-%d_%H.log")
 		self.fileName = 'LoggerData/'+self.fileName
 		self.file = open(self.fileName,'a')
 
@@ -51,7 +52,7 @@ class Logger():
 		logging.info('LoggerTask\t\tSubscribed to SensorTask')
 
 	def on_message(self, client, userdata, msg):
-		if currentFileTime < datetime.datetime.now()-datetime.timedelta(hours=1):
+		if not( currentFileTime == datetime.datetime.now().replace(milisecond=0,second=0,minute=0)):
 			currentFileTime = datetime.datetime.now()
 			createNewLoggerFile()
 			logging.info('LoggerTask\t\tnew Log file has been created')
