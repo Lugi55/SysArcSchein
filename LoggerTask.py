@@ -9,32 +9,6 @@ import sys
 
 
 def main():
-<<<<<<< HEAD
-=======
-	#new Logger File
-	def createNewLoggerFile():
-		now = datetime.datetime.now()
-		fileName = now.strftime("%Y-%m-%d_%H:%M:%S.log")
-		fileName = 'LoggerData/'+fileName
-		file = open(fileName,'a')
-		return file
-
-	#callback funktions
-	def on_subscribe(client, userdata, mid, granted_qos):
-		logging.info('LoggerTask\t\Subscribed to SensorTask')
-	def on_message(client, userdata, msg):
-		global file
-		global currentNumberOfLogs
-		currentNumberOfLogs += 1
-		if currentNumberOfLogs > numberOfLogsPerFile:
-			file = createNewLoggerFile()
-			logging.info('LoggerTask\t\tnew Log file has been created')
-	def on_temperature_message(client, userdata, msg):
-		dict = json.loads(msg.payload.decode('utf-8'))
-		file.write(json.dumps(dict)+'\n')
-
-
->>>>>>> 6ca9c467f7b610e0f677f69707fb04ddb09e073b
 	#init logging module
 	logging.basicConfig(filename='logFile.log',format='%(asctime)s %(message)s',level=logging.DEBUG)
 	logging.info('LoggerTask\t\tstart')
@@ -46,7 +20,6 @@ def main():
 	#register signalHandler
 	signal.signal(signal.SIGINT, signalHandler)
 
-<<<<<<< HEAD
 	#get Object
 	myLogger = Logger()
 	myLogger.start_MQTT()
@@ -82,11 +55,7 @@ class Logger():
 			currentFileTime = datetime.datetime.now()
 			createNewLoggerFile()
 			logging.info('LoggerTask\t\tnew Log file has been created')
-=======
-	#define LoggerFile size
-	numberOfLogsPerFile = 100000
-	currentNumberOfLogs = 0
->>>>>>> 6ca9c467f7b610e0f677f69707fb04ddb09e073b
+
 
 	def on_temperature_message(self, client, userdata, msg):
 		self.dict = json.loads(msg.payload.decode('utf-8'))
@@ -94,7 +63,6 @@ class Logger():
 
 	def start_MQTT(self):
 		self.client.loop_forever()
-
 
 
 #signal Handler (Ctrl+C)
