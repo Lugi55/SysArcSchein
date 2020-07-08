@@ -1,3 +1,14 @@
+# IPC
+## Topics
+``<sensor>/Temperatur``
+## Json 
+```json
+{
+  "timestamp": "number",
+  "value": "number",
+}
+```
+
 # Car Web Interface sequence diagram
 ![GitHub Logo](/images/WebCarInterface.png)
 # Login Logout sequence diagram
