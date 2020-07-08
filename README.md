@@ -9,18 +9,18 @@
 ```json
 {
 "SensorValue1": [
-{"name":"LIDAR","timestamp":"number","value":"number",},
-{"name":"Humidity","timestamp":"number","value":"number"},
-{"name":"SteeringAngle","timestamp":"number","value":"number"},
-{"name":"Temperature","timestamp":"number","value":"number"},
-{"name":"Speed","timestamp":"number","value":"number"},
-{"name":"Altimeter","timestamp":"number","value":"number"}
-],
+	{"name":"LIDAR","timestamp":"number","value":"number",},
+	{"name":"Humidity","timestamp":"number","value":"number"},
+	{"name":"SteeringAngle","timestamp":"number","value":"number"},
+	{"name":"Temperature","timestamp":"number","value":"number"},
+	{"name":"Speed","timestamp":"number","value":"number"},
+	{"name":"Altimeter","timestamp":"number","value":"number"}
+	],
 "SensorValue3": [
-{"name":"Acceleration","timestamp":"number","valueX":"number", "valueY":"number", "valueZ":"number"},
-{"name":"Magnetometer","timestamp":"number","valueX":"number", "valueY":"number", "valueZ":"number"},
-{"name":"Gyro","timestamp":"number","valueX":"number", "valueY":"number", "valueZ":"number"}
-]
+	{"name":"Acceleration","timestamp":"number","valueX":"number", "valueY":"number", "valueZ":"number"},
+	{"name":"Magnetometer","timestamp":"number","valueX":"number", "valueY":"number", "valueZ":"number"},
+	{"name":"Gyro","timestamp":"number","valueX":"number", "valueY":"number", "valueZ":"number"}
+	]
 }
 ```
 
