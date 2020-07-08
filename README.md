@@ -6,7 +6,7 @@
 
 
 ## Json Sensor Frame
-```yaml
+```json
 {
 "SensorValue1": [
 {"name":"LIDAR","timestamp":"number","value":"number",},
@@ -25,7 +25,7 @@
 ```
 
 ## Json Com2Car
-```yaml
+```json
 {
 "timestamp":"number",
 "login":"bool",
@@ -40,7 +40,7 @@
 ```
 
 ## Json Com2Web
-```yaml
+```json
 {
 "timestamp":"number",
 "tokenID":"string",
