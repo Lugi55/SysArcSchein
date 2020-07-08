@@ -6,7 +6,7 @@
 
 
 ## Json Sensor Frame
-```json
+```javascript
 {
 "SensorValue1": [
 {"name":"LIDAR","timestamp":"number","value":"number",},
@@ -25,7 +25,7 @@
 ```
 
 ## Json Com2Car
-```json
+```javascript
 {
 "timestamp":"number",
 "login":"bool",
@@ -40,12 +40,11 @@
 ```
 
 ## Json Com2Web
-```json
+```javascript
 {
 "timestamp":"number",
 "tokenID":"string",
 "login":"bool"
-}
 }
 ```
 
