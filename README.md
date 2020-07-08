@@ -35,7 +35,7 @@
 	"userName":"string",
 	"fullName":"string",
 	"email":"string"
-}
+	}
 }
 ```
 
