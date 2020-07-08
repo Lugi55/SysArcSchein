@@ -25,7 +25,7 @@
 ```
 
 ## Json Com2Car
-```javascript
+```yaml
 {
 "timestamp":"number",
 "login":"bool",
@@ -40,7 +40,7 @@
 ```
 
 ## Json Com2Web
-```javascript
+```yaml
 {
 "timestamp":"number",
 "tokenID":"string",
