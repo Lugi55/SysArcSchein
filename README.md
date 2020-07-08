@@ -1,3 +1,4 @@
-Hello World
+#Login Logout sequence diagram
 ![GitHub Logo](/images/loginlogout.png)
-Format: ![Alt Text](url)
+#Sensor publish sequence diagram
+![GitHub Logo](/images/sensorLoop.png)
