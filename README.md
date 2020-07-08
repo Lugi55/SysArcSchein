@@ -6,7 +6,7 @@
 
 
 ## Json Sensor Frame
-```javascript
+```yaml
 {
 "SensorValue1": [
 {"name":"LIDAR","timestamp":"number","value":"number",},
