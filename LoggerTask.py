@@ -35,7 +35,7 @@ class Logger():
 		self.client.on_message = self.on_message
 		self.client.on_subscribe = self.on_subscribe
 		self.client.connect(host='localhost',port= 1883)
-		self.client.subscribe('SensorTask', qos=0)
+		self.client.subscribe('local/sensor', qos=0)
 		#create first fileTime
 		self.currentFileTime = datetime.datetime.now().replace(microsecond=0,second=0,minute=0)
 
