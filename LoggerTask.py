@@ -52,8 +52,8 @@ class Logger():
 		logging.info('LoggerTask\t\tSubscribed to SensorTask')
 
 	def on_message(self, client, userdata, msg):
-		if not( currentFileTime == datetime.datetime.now().replace(milisecond=0,second=0,minute=0)):
-			currentFileTime = datetime.datetime.now()
+		if not( self.currentFileTime == datetime.datetime.now().replace(milisecond=0,second=0,minute=0)):
+			self.currentFileTime = datetime.datetime.now()
 			createNewLoggerFile()
 			logging.info('LoggerTask\t\tnew Log file has been created')
 
