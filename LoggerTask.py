@@ -32,12 +32,10 @@ class Logger():
 
 		#init MQTT Client
 		self.client = paho.Client()
-		self.client.message_callback_add('SensorTask/Temperature', self.on_temperature_message)
 		self.client.on_message = self.on_message
 		self.client.on_subscribe = self.on_subscribe
 		self.client.connect(host='localhost',port= 1883)
-		self.client.subscribe('SensorTask/#', qos=0)
-
+		self.client.subscribe('SensorTask', qos=0)
 		#create first fileTime
 		self.currentFileTime = datetime.datetime.now().replace(microsecond=0,second=0,minute=0)
 
@@ -52,14 +50,12 @@ class Logger():
 		logging.info('LoggerTask\t\tSubscribed to SensorTask')
 
 	def on_message(self, client, userdata, msg):
-		if not( currentFileTime == datetime.datetime.now().replace(milisecond=0,second=0,minute=0)):
-			currentFileTime = datetime.datetime.now()
-			createNewLoggerFile()
+		if not( self.currentFileTime == datetime.datetime.now().replace(microsecond=0,second=0,minute=0)):
+			self.currentFileTime = datetime.datetime.now()
+			self.createNewLoggerFile()
 			logging.info('LoggerTask\t\tnew Log file has been created')
-
-
-	def on_temperature_message(self, client, userdata, msg):
 		self.dict = json.loads(msg.payload.decode('utf-8'))
+		print('test')
 		self.file.write(json.dumps(self.dict)+'\n')
 
 	def start_MQTT(self):
