@@ -1,11 +1,15 @@
-# IPC
-## Topics
+# Topics
+# global
+``<carID>/sensor``
+``<carID>/com2/web``
+``<carID>/com2/car``
+# local
 ``<sensorTask>``
 ``<com2>/web``
 ``<com2/web``
 
 
-## Json Sensor Frame
+# Json Sensor Frame
 ```json
 {
 "SensorValue1": [
@@ -24,7 +28,7 @@
 }
 ```
 
-## Json Com2Car
+# Json Com2Car
 ```json
 {
 "timestamp":"number",
@@ -39,7 +43,7 @@
 }
 ```
 
-## Json Com2Web
+# Json Com2Web
 ```json
 {
 "timestamp":"number",
