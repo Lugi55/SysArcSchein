@@ -1,1 +1,6 @@
 
+Readme -> Luginsalnd          -> 4h
+SensorTask -> Luginsland
+LoggerTaks -> Luginsland
+GUITask -> Casagranda
+CommunicationTask -> Casagranda
