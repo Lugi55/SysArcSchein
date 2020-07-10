@@ -11,9 +11,9 @@ The datasheet for the LSM6DS33 is available at
 """
 
 import math
-from i2c import I2C
+from IMU.i2c import I2C
 from time import sleep
-from constants import *
+from IMU.constants import *
 
 
 class LSM6DS33(I2C):
@@ -78,7 +78,7 @@ class LSM6DS33(I2C):
             self.write_register(LSM6DS33_ADDR, LSM6DS33_CTRL2_G, 0x58)
             self.is_gyro_enabled = True
         if calibration:
-            self.calibrate()
+            #self.calibrate()
             self.is_gyro_calibrated = True
             self.is_accel_calibrated = True
 

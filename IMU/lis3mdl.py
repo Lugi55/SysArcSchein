@@ -9,8 +9,8 @@ The datasheet for the LSM6DS33 is available at
 [https://www.pololu.com/file/download/LIS3MDL.pdf?file_id=0J1089]
 """
 
-from i2c import I2C
-from constants import *
+from IMU.i2c import I2C
+from IMU.constants import *
 
 
 class LIS3MDL(I2C):

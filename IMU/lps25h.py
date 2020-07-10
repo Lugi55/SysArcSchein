@@ -9,8 +9,8 @@ The datasheet for the LPS25H is available at
 [https://www.pololu.com/file/download/LPS25H.pdf?file_id=0J761]
 """
 
-from i2c import I2C
-from constants import *
+from IMU.i2c import I2C
+from IMU.constants import *
 
 
 class LPS25H(I2C):
