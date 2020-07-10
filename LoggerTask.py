@@ -55,7 +55,6 @@ class Logger():
 			self.createNewLoggerFile()
 			logging.info('LoggerTask\t\tnew Log file has been created')
 		self.dict = json.loads(msg.payload.decode('utf-8'))
-		print('test')
 		self.file.write(json.dumps(self.dict)+'\n')
 
 	def start_MQTT(self):
