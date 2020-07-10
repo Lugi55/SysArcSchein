@@ -1,8 +1,8 @@
 # Topics
 ## global
-``<carID>/sensor``
-``<carID>/com2/web``
-``<carID>/com2/car``
+``<V3>/sensor``
+``<V3>/com2/web``
+``<V3>/com2/car``
 ## local
 ``<sensorTask>``
 ``<com2>/web``
