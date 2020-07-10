@@ -4,9 +4,9 @@
 ``<V3>/com2/web``
 ``<V3>/com2/car``
 ## local
-``<sensorTask>``
-``<com2>/web``
-``<com2/web``
+``<local>``
+``<local>/com2/car``
+``<local>/com2/web``
 
 # Json Frames
 ## Json Sensor Frame
