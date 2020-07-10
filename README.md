@@ -4,7 +4,7 @@
 ``<V3>/com2/web``
 ``<V3>/com2/car``
 ## local
-``<local>``
+``<local>/sensor``
 ``<local>/com2/car``
 ``<local>/com2/web``
 
