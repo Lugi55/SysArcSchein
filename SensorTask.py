@@ -123,16 +123,16 @@ class Sensor():
 		self.humidity = self.randomWalk(start=10,stop=95,dx=0.1,x=self.humidity)
 		self.humidityDict = {"name":"Humidity","timestamp":time.time(),"value":self.humidity}
 		#Acceleration
-		self.Accel = self.lsm6ds33.get_accelerometer_g_forces()
-		self.AccelDict = {"name":"Acceleration","timestamp":time.time(),"valueX":self.Accel[0],"valueY":self.Accel[1],"valueZ":self.Accel[2]}
+		self.accel = self.lsm6ds33.get_accelerometer_g_forces()
+		self.accelDict = {"name":"Acceleration","timestamp":time.time(),"valueX":self.accel[0],"valueY":self.accel[1],"valueZ":self.accel[2]}
 		#Gyro
-		self.Gyro = self.lsm6ds33.get_gyro_angular_velocity()
-		self.GyroDict = {"name":"Gyro","timestamp":time.time(),"valueX":self.Gyro[0],"valueY":self.Gyro[1],"valueZ":self.Gyro[2]}
+		self.gyro = self.lsm6ds33.get_gyro_angular_velocity()
+		self.gyroDict = {"name":"Gyro","timestamp":time.time(),"valueX":self.gyro[0],"valueY":self.gyro[1],"valueZ":self.gyro[2]}
 		#make big dict to publish
 		self.dict["SensorValue1"].append(self.humidityDict)
 		self.dict["SensorValue1"].append(self.tempDict)
-		self.dict["SensorValue3"].append(self.AccelDict)
-		self.dict["SensorValue3"].append(self.GyroDict)
+		self.dict["SensorValue3"].append(self.accelDict)
+		self.dict["SensorValue3"].append(self.gyroDict)
 		#publish to local Brocker
 		self.client.publish('SensorTask', json.dumps(self.dict), qos = 0)
 		#when not login 1s measurement frequency
