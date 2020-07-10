@@ -52,6 +52,10 @@
 }
 ```
 
+# Sensor Daten login vs logout
+```login: LIDAR, Humidity, SteeringAngle, Temperaturem, Speed, Altimeter, Acceleration, Magnetometer, Gyro```
+```logout: Humidity, Temperaturem, Altimeter, Gyro```
+
 # Car Web Interface sequence diagram
 ![GitHub Logo](/images/WebCarInterface.png)
 # Login Logout sequence diagram
