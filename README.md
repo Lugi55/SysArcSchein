@@ -1,14 +1,12 @@
-# Topics
-## global
+## global topics
 ``<V3>/sensor``
 ``<V3>/com2/web``
 ``<V3>/com2/car``
-## local
+## local topics
 ``<local>/sensor``
 ``<local>/com2/car``
 ``<local>/com2/web``
 
-# Json Frames
 ## Json Sensor Frame
 ```json
 {
@@ -28,7 +26,7 @@
 }
 ```
 
-## Json Com2Car Frame
+## Json com2car Frame
 ```json
 {
 "timestamp":"number",
@@ -43,7 +41,7 @@
 }
 ```
 
-## Json Com2Web Frame
+## Json com2web Frame
 ```json
 {
 "timestamp":"number",
