@@ -24,7 +24,6 @@ def main():
 	signal.signal(signal.SIGINT, signalHandler)
 
 	mySensor = Sensor()
-	mySensor.setLogin(True)
 	mySensor.run()
 
 class Sensor():
@@ -32,24 +31,25 @@ class Sensor():
 		#login or not login
 		self.login = False
 
-		#Get IMU
+		#Get hw sensor
 		self.lis3mdl = LIS3MDL()
 		self.lis3mdl.enable()
-
 		self.lps25h = LPS25H()
 		self.lps25h.enable()
-
 		self.lsm6ds33 = LSM6DS33()
 		self.lsm6ds33.enable()
+		self.vcgm = Vcgencmd()
+		self.next_call = time.time()
 
 		#init MQTT Client
 		self.client = paho.Client()
 		self.client.connect(host='localhost',port=1883)
+		self.client.on_subscribe = self.on_subscribe
+		self.client.message_callback_add('local/com2/car',self.on_com2car)
+		self.client.subscribe('local/com2/car')
 		self.client.loop_start()
 
-		self.vcgm = Vcgencmd()
-		self.next_call = time.time()
-
+		#init some sensor values
 		self.humidity = 40
 		self.speed = 0
 		self.steeringAngle = 0
@@ -57,6 +57,16 @@ class Sensor():
 
 	def setLogin(self,boolValue):
 		self.login = boolValue
+
+	def on_subscribe(self,client,userdata,mid,graned_qos):
+		loggin.info('SensorTask\t\tsubscribe to local/com2/car')
+
+	def on_com2car(self,client,userdata,msg):
+		logging.info('SensorTask\t\ttry user login or logout')
+		dict = json.loads(msg.payload.decode('utf-8'))
+		if dict["certifiyed"]:
+			logging.info('SensorTask\t\tuser login or logout succesfull')
+			self.setLogin(dict["login"])
 
 	def randomWalk(self,start,stop,dx,x):
 		if not self.login: dx = dx*10
