@@ -11,48 +11,13 @@ import getch
 
 menu = None
 parent = [] 
+disp = 0
+last_stamp = 0 
 
 def GUI(stdscr):
     time_parent = 0
-    MENU = "menu"
-    COMMAND = "command"
-    VALUE = "value"
+    global menu, menu_data
 
-    menu_data = {
-    'title': "Vehicle 3 GUI", 'type': MENU, 'subtitle': "Please selection an option...",
-    'options': [
-        {
-        'title': "View Sensor Data", 'type': MENU, 'subtitle':"Sensor Data",
-        'options': [
-            { 'title': "Back", 'type': COMMAND, 'command': 'BACK' },
-            { 'title': "Temperature", 'type': VALUE, 'unit': '°C' },
-            { 'title': "Exit", 'type': COMMAND, 'command':"Exit"  }, 
-        ] 
-        },   
-        {
-        'title': "View Topics", 'type': MENU, 'subtitle':"Sensor Data",
-        'options': [
-            { 'title': "Back", 'type': COMMAND, 'command': 'BACK' },
-            { 'title': "View Temperature Topic", 'type': COMMAND, 'command': 'View Temperature Topic' },
-            { 'title': "View Temperature Topic", 'type': COMMAND, 'command': 'View Temperature Topic' },
-            { 'title': "View Temperature Topic", 'type': COMMAND, 'command': 'View Temperature Topic' },
-            { 'title': "View Temperature Topic", 'type': COMMAND, 'command': 'View Temperature Topic' },
-            { 'title': "Exit", 'type': COMMAND, 'command':"Exit"  }, 
-        ] 
-        },
-        {    
-        'title': "Scoreboard", 'type': MENU, 'subtitle':"Sensor Data",
-        'options': [
-            { 'title': "Back", 'type': COMMAND, 'command': 'BACK' },
-            { 'title': "Exit", 'type': COMMAND, 'command':"Exit"  }, 
-        ] 
-        },
-        {    
-        'title': "Exit", 'type': COMMAND, 'command':"Exit"
-        },   
-    ]
-    }
-    global menu
     if not menu:
         menu = menu_data
     
@@ -70,11 +35,13 @@ def GUI(stdscr):
         stdscr.addstr(3,2, menu['subtitle'], curses.A_BOLD) #Subtitle for this menu
         for idx in range(len(menu_var['options'])):
             if idx == current_row:
+                # print line with cursor
                 stdscr.attron(curses.color_pair(1))
-                stdscr.addstr(idx+4,4,"%d - %s" % (idx+1, menu_var['options'][idx]['title']))
+                stdscr.addstr(idx+4,4,'%d - %s' % (idx+1, menu_var['options'][idx]['title']))
                 stdscr.attroff(curses.color_pair(1))
             else:
-                stdscr.addstr(idx+4,4,"%d - %s" % (idx+1, menu_var['options'][idx]['title']))
+                # print other lines
+                stdscr.addstr(idx+4,4,'%d - %s' % (idx+1, menu_var['options'][idx]['title']))
 
     stdscr.clear()
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
@@ -93,7 +60,7 @@ def GUI(stdscr):
             updateMenu(current_row, menu)
         elif key == curses.KEY_ENTER or key in [10, 13]:
             # if type is 'command'
-            if menu['options'][current_row]['type'] == COMMAND:
+            if menu['options'][current_row]['type'] == 'command':
                 if menu['options'][current_row]['command'] == 'BACK':
                     # view parent menu
                     # pfusch ...
@@ -103,7 +70,7 @@ def GUI(stdscr):
                     # return command value
                     return menu['options'][current_row]['command'] # return command
             # if type is 'menu'
-            if menu['options'][current_row]['type'] == MENU:
+            if menu['options'][current_row]['type'] == 'menu':
                 # access submenu
                 # ... pfusch
                 if int(round(time.time() * 1000)) - time_parent > 10:
@@ -111,40 +78,79 @@ def GUI(stdscr):
                     current_row = 0
 
 
-
-#init logging module
-logging.basicConfig(filename='logFile.log',format='%(asctime)s %(message)s',level=logging.DEBUG)
-logging.info('GUITask\t\tstart')
-
-niceValue = os.nice(10)
-logging.info('GUITask\t\tniceValue:%s',niceValue)
-
-
 def on_subscribe(client, userdata, mid, granted_qos):
-	logging.info('GUITask\t\tSubscribed to SensorTask')
+    logging.info('GUITask\t\tSubscribed to SensorTask')
+def on_unsubscribe(client, userdata, mid):
+    pass
+
 def on_message(client, userdata, msg):
-	dict = json.loads(msg.payload.decode('utf-8'))
-	if disp: print(dict)
+    def topic(message):
+        global last_stamp
+        stamp = float(message['timestamp'])
+        value = float(message['temperature'])
+        jitter = stamp - last_stamp
+        last_stamp = stamp
+
+        print("temperature: " + str(value) + "\tstamp: " + str(stamp) + "\tjitter: " + str(jitter)) 
 
 
-disp = False
+    dict = json.loads(msg.payload.decode('utf-8'))    
+    if disp == 1:
+        print(dict)
+    if disp == 2:
+        topic(dict)
 
-while True:
-	#start GUI blocking
-	reply = curses.wrapper(GUI)
-	if(reply == 'Exit'):
-		sys.exit(0)
-	if(reply == 'View Temperature Topic'):
-		client = paho.Client()
-		client.on_message = on_message
-		client.on_subscribe = on_subscribe
-		client.connect(host='localhost',port= 1883)
-		client.subscribe('SensorTask/Temperature', qos=0)
-		client.loop_start()
-		disp = True
-		input()
-		disp = False
-		client.loop_stop()
+
+
+def display_topic(topic):
+    global client, disp
+    client.subscribe(topic, qos=0)
+    client.loop_start()
+    disp = 1
+    input()
+    disp = 0
+    client.loop_stop()
+
+def display_data(topic):
+    global client, disp
+    client.subscribe(topic, qos=0)
+    client.loop_start()
+    disp = 2
+    input()
+    disp = 0
+    client.loop_stop()
+
+
+
+if __name__ == '__main__':
+    #load menu params
+    param_file = open("gui_params.json")
+    menu_data = json.load(param_file)
+    #init logging module
+    logging.basicConfig(filename='logFile.log',format='%(asctime)s %(message)s',level=logging.DEBUG)
+    logging.info('GUITask\t\tstart')
+    #define os priority
+    niceValue = os.nice(10)
+    logging.info('GUITask\t\tniceValue:%s',niceValue)
+
+    client = paho.Client()
+    client.on_message = on_message
+    client.on_subscribe = on_subscribe
+    client.on_unsubscribe = on_unsubscribe
+    client.connect(host='localhost',port= 1883)
+
+
+    while True:
+        #start GUI blocking
+        reply = curses.wrapper(GUI)
+        if(reply == 'Exit'):
+            sys.exit(0)
+        if(reply == 'topic_temprature'):
+            display_topic('SensorTask/Temperature')
+        if(reply == 'data_temperature'):
+            display_data('SensorTask/Temperature')
+
+
 
 
 

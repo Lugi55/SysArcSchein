@@ -21,18 +21,22 @@ class InternCom:
 		# open / ceate file for overflow notation
 		self.__overflow_file = open('LoggerData/overflow.log','a')
 
-	
 	def end_client(self):
 		self._client.loop_stop()
 		self.__logger_function("client loop ended by user")
 
-	def get_buffer(self):
+	def get_buffer_element(self):
+		# lock threads
 		with lock:
-			return self.__buffer
+			return self.__buffer.pop(0)
+
+	def get_buffer_len(self):
+		# lock threads
+		with lock:
+			return len(self.__buffer)	
 
 	def set_flag(self, flag):
 		self.__flag = flag
-
 
 	def init_mqtt_client(self):
 		self._client = paho.Client()
@@ -81,7 +85,6 @@ class InternCom:
 		print(text)
 
 
-
 # class for external communication
 class ExternCom:
 	__host = 'localhost'
@@ -110,7 +113,6 @@ class ExternCom:
 		# start loop function
 		self.__on_loop()
 
-
 	#callback funktions
 	def _on_subscribe(self, client, userdata, mid, granted_qos):
 		self.__logger_function("subscribed to /SensorTask")
@@ -121,9 +123,9 @@ class ExternCom:
 	
 	def __on_loop(self):
 		while True:
-			if len(com_intern.get_buffer()):
+			if com_intern.get_buffer_len():
 				# send message from buffer
-				self._client.publish(self.__topic, str(self.__com_intern.get_buffer().pop(0)), qos = self.__qos)
+				self._client.publish(self.__topic, str(self.__com_intern.get_buffer_element()), qos = self.__qos)
 				#print(rc)
 			time.sleep(0.1) # this value is chosen to overflow the buffer on purpose
 
@@ -144,17 +146,6 @@ def signalHandler(sig,frame):
 	sys.exit(0)
 
 
-def thread_test():
-	global com_intern
-	var = 0
-	while True:
-		# lock access to buffer 
-		var = len(com_intern.get_buffer())
-		print(var)
-		if var:
-			com_intern.get_buffer().pop(0)
-			print("pop")
-		time.sleep(0.1)
 
 if __name__ == "__main__":
 	#define os priority
@@ -171,7 +162,6 @@ if __name__ == "__main__":
 	# use threads
 	lock = threading.Lock()
 	t1 = threading.Thread(target=com_intern.init_mqtt_client)
-	#t2 = threading.Thread(target=thread_test) # test method
 	t2 = threading.Thread(target=com_extern.init_mqtt_client)
 
 	t1.start()
