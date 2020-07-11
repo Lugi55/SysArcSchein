@@ -64,7 +64,7 @@ class Sensor():
 	def on_com2car(self,client,userdata,msg):
 		logging.info('SensorTask\t\ttry user login or logout')
 		dict = json.loads(msg.payload.decode('utf-8'))
-		if dict["certifiyed"]:
+		if dict["certified"]:
 			logging.info('SensorTask\t\tuser login or logout succesfull')
 			self.setLogin(dict["login"])
 
