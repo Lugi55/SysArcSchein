@@ -30,6 +30,9 @@ class Logger():
 		#init first file
 		self.createNewLoggerFile()
 
+		#define max Files
+		self.maxFiles = 20
+
 		#init MQTT Client
 		self.client = paho.Client()
 		self.client.on_message = self.on_message
@@ -39,6 +42,15 @@ class Logger():
 		#create first fileTime
 		self.currentFileTime = datetime.datetime.now().replace(microsecond=0,second=0,minute=0)
 
+
+	def removeOldFiles():
+		file = []
+		for file in os.listdir('./LoggerData'):
+			if file.endswith('.log'):
+				files.append(file)
+		while len(file) > self.maxFiles:
+			os.remove('LoggerData/'+file[0])
+			logging.info('LoggerTask\t\tremove Logger File')
 	#new Logger File
 	def createNewLoggerFile(self):
 		self.fileName = datetime.datetime.now().replace(microsecond=0, second=0, minute=0).strftime("%Y-%m-%d_%H.log")
