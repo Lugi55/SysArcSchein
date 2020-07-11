@@ -13,6 +13,7 @@ menu = None
 parent = [] 
 disp = 0
 last_stamp = 0 
+drift = 0 
 
 def GUI(stdscr):
     time_parent = 0
@@ -85,13 +86,15 @@ def on_unsubscribe(client, userdata, mid):
 
 def on_message(client, userdata, msg):
     def topic(message):
-        global last_stamp
+        global last_stamp, drift 
         stamp = float(message['timestamp'])
         value = float(message['temperature'])
-        jitter = stamp - last_stamp
+        dt = stamp - last_stamp
+        jitter = dt - 0.1
+        drift += jitter
         last_stamp = stamp
 
-        print("temperature: " + str(value) + "\tstamp: " + str(stamp) + "\tjitter: " + str(jitter)) 
+        print("temperature: " + str(value) + "\tstamp: " + str(stamp) + "\tjitter: " + str(jitter) + "\tdrift: " + str(drift)) 
 
 
     dict = json.loads(msg.payload.decode('utf-8'))    
