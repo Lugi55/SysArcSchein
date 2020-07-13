@@ -30,6 +30,7 @@ class Sensor():
 	def __init__(self):
 		#login or not login
 		self.login = False
+		self.userName = None
 
 		#Get hw sensor
 		self.lis3mdl = LIS3MDL()
@@ -46,7 +47,8 @@ class Sensor():
 		self.client.connect(host='localhost',port=1883)
 		self.client.on_subscribe = self.on_subscribe
 		self.client.message_callback_add('local/com2/car',self.on_com2car)
-		self.client.subscribe('local/com2/car')
+		self.client.message_callback_add('local/RFID',self.on_RFID)
+		self.client.subscribe('local/#')
 		self.client.loop_start()
 
 		#init some sensor values
@@ -55,18 +57,41 @@ class Sensor():
 		self.steeringAngle = 0
 		self.LIDAR = 10
 
-	def setLogin(self,boolValue):
-		self.login = boolValue
-
 	def on_subscribe(self,client,userdata,mid,graned_qos):
 		loggin.info('SensorTask\t\tsubscribe to local/com2/car')
+
+	def on_con2web(self,tokenID):
+		dict = {
+			"timestamp":time.time(),
+			"tokenID":tokenID,
+			"login":not self.login
+			}
+		self.client.publish('local/com2web',json.dumps(dict), qos = 2)
+		print(dict)
+
+	def on_RFID(self,client,userdata,msg):
+		logging.info('SenosrTask\t\tRFID message incoming')
+		dict = json.loads(msg.payload.decode('utf-8'))
+		self.on_con2web(dict['tokenID'])
 
 	def on_com2car(self,client,userdata,msg):
 		logging.info('SensorTask\t\ttry user login or logout')
 		dict = json.loads(msg.payload.decode('utf-8'))
-		if dict["certified"]:
-			logging.info('SensorTask\t\tuser login or logout succesfull')
-			self.setLogin(dict["login"])
+		if self.login == False and dict["login"]==True and dict["certified"]==True:
+			logging.info('SensorTask\t\tuser login succesfull')
+			slef.userName = dict["user"]["userName"]
+			self.login = True
+		if self.login == False and dict["login"]==False:
+			logging.info('SensorTask\t\tno user to unlog')
+		if self.login == False and dict["login"]==True and dict["certified"]==False:
+			logging.info('SensorTask\t\tuser not certified')
+		if self.login == True and dict["login"]==True:
+			logging.info('SensorTask\t\ta user is already logined in')
+		if self.login == True and dict["login"]==False and dict["user"]["userName"]==self.userName:
+			logging.info('SensorTask\t\tuser logout succesfull')
+			self.userName = None
+			self.login = False
+
 
 	def randomWalk(self,start,stop,dx,x):
 		if not self.login: dx = dx*10
