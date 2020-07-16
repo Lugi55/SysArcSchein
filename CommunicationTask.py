@@ -7,14 +7,11 @@ import sys
 import time
 import threading
 import queue
-
+import constants
 
 
 # class for internal communication
 class InternCom:
-	# sensor message buffer
-	__BUFFERLEN = 20
-	__buffer = []
 
 	def __init__(self):
 		self.__logger_function("object created")
@@ -24,16 +21,6 @@ class InternCom:
 	def end_client(self):
 		self._client.loop_stop()
 		self.__logger_function("client loop ended by user")
-
-	def get_buffer_element(self):
-		# lock threads
-		with lock:
-			return self.__buffer.pop(0)
-
-	def get_buffer_len(self):
-		# lock threads
-		with lock:
-			return len(self.__buffer)	
 
 	def set_flag(self, flag):
 		self.__flag = flag
@@ -60,25 +47,24 @@ class InternCom:
 		self.__logger_function("unexpected message" + msg.payload.decode('utf-8'))
 
 	def _on_sensor_message(self, client, userdata, msg):
-		# lock threads 
+		global _sensor_buf
+		# blocking queque access
+		_sensor_buf.put(json.loads(msg.payload.decode('utf-8')))
+		# avoid race condition with threadlock
 		with lock:
-			self.__buffer.append(json.loads(msg.payload.decode('utf-8')))
-			#print(self.__buffer[-1]) # debug
-			print ("buffer length: "+str(len(self.__buffer)))
-			
-			# if buffer overflows
-			if len(self.__buffer) >= self.__BUFFERLEN:
-				length = len(self.__buffer)
-				# delete buffer content
-				del self.__buffer[:]
+			length = _sensor_buf.qsize()
+			print(length)
+			if length >= constants.sensorBufferSize:
+				# delete all elements in queue
+				_sensor_buf.queue.clear()
 				self.__overflow_file.write("deleted sensor messages = "+str(length)+"\n")
 				self.__logger_function("buffer: deleted messages = "+str(length))
-
 
 	def __on_loop(self):
 		global _FINISH
 		while True:
 			if _FINISH:
+				# exit if user ends skript
 				break
 			pass
 
@@ -102,9 +88,6 @@ class ExternCom:
 		self._client.loop_stop()
 		self.__logger_function("client loop ended by user")
 
-	def set_interncom_obj(self, com_intern):
-		self.__com_intern = com_intern
-
 	def init_mqtt_client(self):
 		self._client = paho.Client()
 		self._client.on_subscribe = self._on_subscribe
@@ -125,15 +108,25 @@ class ExternCom:
 		print("data published")
 	
 	def __on_loop(self):
-		global _FINISH
+		global _FINISH, _sensor_buf
 		while True:
 			if _FINISH:
-				break			
-			if com_intern.get_buffer_len():
+				# exit if user ends skript
+				break	
+			# non-bocking get elemtent from queue with timeout 		
+			try:
+				msg = _sensor_buf.get(block=False)
+			except queue.Empty:
+				# pass expected empty queue exception
+				msg = None
+				pass
+			if msg is not None:
 				# send message from buffer
-				self._client.publish(self.__topic, str(self.__com_intern.get_buffer_element()), qos = self.__qos)
+				self._client.publish(self.__topic, str(msg), qos = self.__qos)
 				#print(rc)
-			time.sleep(0.1) # this value is chosen to overflow the buffer on purpose
+				# tell queue that task is done
+				_sensor_buf.task_done()
+			time.sleep(constants.measruementPeriodLogin / 10)
 
 	#logger prints
 	def __logger_function(self, text):
@@ -149,7 +142,10 @@ def signalHandler(sig,frame):
 	com_extern.end_client()
 	_FINISH = True
 	t1.join()
+	print("exit t1")
 	t2.join()
+	print("exit t2")
+
 
 
 
@@ -161,10 +157,11 @@ if __name__ == "__main__":
 	logging.info('CommunicationTask\tniceValue:%s',niceValue)
 	#register signalHandler
 	signal.signal(signal.SIGINT, signalHandler)
+	# create queues
+	_sensor_buf = queue.Queue()
 	# create communication objects
 	com_intern = InternCom()
 	com_extern = ExternCom()
-	com_extern.set_interncom_obj(com_intern)
 	# use threads
 	_FINISH = False
 	lock = threading.Lock()
