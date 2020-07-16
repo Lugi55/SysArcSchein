@@ -1,13 +1,13 @@
 import paho.mqtt.client as paho
-import datetime
 import json
-import socket
 import os
 import logging
 import signal
 import sys
 import time
 import threading
+import queue
+
 
 
 # class for internal communication
@@ -76,7 +76,10 @@ class InternCom:
 
 
 	def __on_loop(self):
+		global _FINISH
 		while True:
+			if _FINISH:
+				break
 			pass
 
 	#logger prints
@@ -122,7 +125,10 @@ class ExternCom:
 		print("data published")
 	
 	def __on_loop(self):
+		global _FINISH
 		while True:
+			if _FINISH:
+				break			
 			if com_intern.get_buffer_len():
 				# send message from buffer
 				self._client.publish(self.__topic, str(self.__com_intern.get_buffer_element()), qos = self.__qos)
@@ -137,13 +143,13 @@ class ExternCom:
 
 #signal Handler (Ctrl+C)
 def signalHandler(sig,frame):
-	global com_intern, com_extern, t1, t2
+	global com_intern, com_extern, t1, t2, _FINISH
 	logging.info('CommunicationTask\tCtrl+C - killed by user')
 	com_intern.end_client()
-	#com_extern.end_client()
-	#t1.killed = True
-	#t2.killed = True
-	sys.exit(0)
+	com_extern.end_client()
+	_FINISH = True
+	t1.join()
+	t2.join()
 
 
 
@@ -160,13 +166,14 @@ if __name__ == "__main__":
 	com_extern = ExternCom()
 	com_extern.set_interncom_obj(com_intern)
 	# use threads
+	_FINISH = False
 	lock = threading.Lock()
 	t1 = threading.Thread(target=com_intern.init_mqtt_client)
 	t2 = threading.Thread(target=com_extern.init_mqtt_client)
 
 	t1.start()
 	t2.start()
-	
+
 	# interpreter should not reach this area
 	logging.info('CommunicationTask\tThreading error') 
 
