@@ -1,0 +1,53 @@
+{
+	"title": "Vehicle 3 GUI",
+	"type": "menu",
+	"subtitle": "Please select an option...",
+	"options": [{
+			"title": "View Sensor Data",
+			"type": "menu",
+			"subtitle": "Sensor Data",
+			"options": [{
+					"title": "Back",
+					"type": "command",
+					"command": "BACK"
+				},
+				{
+					"title": "View Temperature",
+					"type": "command",
+					"command": "data_temperature"
+				},
+				{
+					"title": "Exit",
+					"type": "command",
+					"command": "Exit"
+				}
+			]
+		},
+		{
+			"title": "View Topics",
+			"type": "menu",
+			"subtitle": "Sensor Data",
+			"options": [{
+					"title": "Back",
+					"type": "command",
+					"command": "BACK"
+				},
+				{
+					"title": "View Temperature Topic",
+					"type": "command",
+					"command": "topic_temprature"
+				},
+				{
+					"title": "Exit",
+					"type": "command",
+					"command": "Exit"
+				}
+			]
+		},
+		{
+			"title": "Exit",
+			"type": "command",
+			"command": "Exit"
+		}
+	]
+}
