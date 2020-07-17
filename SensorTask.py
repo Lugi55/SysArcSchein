@@ -10,6 +10,7 @@ import json
 import signal
 import sys
 import random
+import constants
 
 def main():
 	#init logging module
@@ -145,7 +146,7 @@ class Sensor():
 		#publish to local Brocker
 		self.client.publish('local/sensor', json.dumps(self.dict), qos = 0)
 		#when not login 1s measurement frequency
-		self.next_call = self.next_call+0.1
+		self.next_call = self.next_call+constants.measurementPeriodLogin
 		time.sleep(self.next_call - time.time())
 
 	def puplishPart(self):
@@ -171,7 +172,7 @@ class Sensor():
 		#publish to local Brocker
 		self.client.publish('local/sensor', json.dumps(self.dict), qos = 0)
 		#when not login 1s measurement frequency
-		self.next_call = self.next_call+1
+		self.next_call = self.next_call+constants.measurementPeriodLogout
 		time.sleep(self.next_call - time.time())
 
 	#measurement Loop

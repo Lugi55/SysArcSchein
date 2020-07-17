@@ -1,4 +1,4 @@
 
-measruementPeriodLogin = 0.1
+measurementPeriodLogin = 0.1
 measurementPeriodLogout = 1
 sensorBufferSize = 100
