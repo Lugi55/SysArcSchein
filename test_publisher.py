@@ -22,10 +22,12 @@ def main():
 		print("user stopped process")
 		sys.exit(0)
 
-	host = 'localhost'
-	port = 1883
-	qos = 0
-	topic = 'local/sensor'
+	#host = 'localhost'
+	#port = 8884
+	host = '192.168.200.165'
+	port = 8883
+	qos = 2
+	topic = '/SysArch/V3/sensor'
 
 	#register signalHandler
 	signal.signal(signal.SIGINT, signalHandler)
@@ -35,9 +37,9 @@ def main():
 	#init MQTT Client
 	client = paho.Client()
 	# username and password
-	#client.username_pw_set(username="V3", password="DE5")
+	client.username_pw_set(username="V3", password="DE5")
 	# connect to broker
-	client.connect(host=host,port=port,keepalive=60,)
+	client.connect(host=host,port=port,keepalive=60)
 	client.on_publish = on_publish
 	client.on_message = on_message
 	# subscribe
@@ -52,10 +54,10 @@ def main():
 		timestamp = str(time.time())
 		dict = {'timestamp':timestamp,'temperature':temperature}
 		# publish
-		#rc = client.publish(topic, json.dumps(dict), qos = qos)
-		client.publish("V3/con2/car", json.dumps(dict), qos = 2)
-		client.publish("local/con2/web", json.dumps(dict), qos = 2)
-		client.publish("local/sensor",  json.dumps(dict), qos = 0)
+		rc = client.publish(topic, json.dumps(dict), qos = qos)
+		#client.publish("V3/con2/car", json.dumps(dict), qos = 2)
+		#client.publish("local/con2/web", json.dumps(dict), qos = 2)
+		#client.publish("local/sensor",  json.dumps(dict), qos = 0)
 		#print(rc)
 		time.sleep(0.5)
 
