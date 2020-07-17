@@ -58,7 +58,7 @@ class Sensor():
 		self.LIDAR = 10
 
 	def on_subscribe(self,client,userdata,mid,graned_qos):
-		loggin.info('SensorTask\t\tsubscribe to local/com2/car')
+		logging.info('SensorTask\t\tsubscribe to local/com2/car')
 
 	def on_con2web(self,tokenID):
 		dict = {
@@ -79,7 +79,7 @@ class Sensor():
 		dict = json.loads(msg.payload.decode('utf-8'))
 		if self.login == False and dict["login"]==True and dict["certified"]==True:
 			logging.info('SensorTask\t\tuser login succesfull')
-			slef.userName = dict["user"]["userName"]
+			self.userName = dict["user"]["userName"]
 			self.login = True
 		if self.login == False and dict["login"]==False:
 			logging.info('SensorTask\t\tno user to unlog')
