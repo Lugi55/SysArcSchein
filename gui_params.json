@@ -23,22 +23,22 @@
 						{
 							"title": "View all values",
 							"type": "command",
-							"command": "topic_local"
+							"command": "Acceleration all"
 						},
 						{
 							"title": "View valueX",
 							"type": "command",
-							"command": "topic_local_sensor"
+							"command": "Acceleration x"
 						},
 						{
 							"title": "View valueY",
 							"type": "command",
-							"command": "topic_local_con2_web"
+							"command": "Acceleration x"
 						},
 						{
 							"title": "View valueZ",
 							"type": "command",
-							"command": "topic_local_con2_car"
+							"command": "Acceleration y"
 						}
 					]
 				},
@@ -54,22 +54,22 @@
 						{
 							"title": "View all values",
 							"type": "command",
-							"command": "topic_local"
+							"command": "Magnetometer all"
 						},
 						{
 							"title": "View valueX",
 							"type": "command",
-							"command": "topic_local_sensor"
+							"command": "Magnetometer x"
 						},
 						{
 							"title": "View valueY",
 							"type": "command",
-							"command": "topic_local_con2_web"
+							"command": "Magnetometer y"
 						},
 						{
 							"title": "View valueZ",
 							"type": "command",
-							"command": "topic_local_con2_car"
+							"command": "Magnetometer z"
 						}
 					]
 				},
@@ -85,54 +85,54 @@
 						{
 							"title": "View all values",
 							"type": "command",
-							"command": "topic_local"
+							"command": "Gyro all"
 						},
 						{
 							"title": "View valueX",
 							"type": "command",
-							"command": "topic_local_sensor"
+							"command": "Gyro x"
 						},
 						{
 							"title": "View valueY",
 							"type": "command",
-							"command": "topic_local_con2_web"
+							"command": "Gyro y"
 						},
 						{
 							"title": "View valueZ",
 							"type": "command",
-							"command": "topic_local_con2_car"
+							"command": "Gyro z"
 						}
 					]
 				},
 				{
 					"title": "View Altimeter",
 					"type": "command",
-					"command": "data_altimeter"
+					"command": "Altimeter"
 				},
 				{
 					"title": "View Humidity",
 					"type": "command",
-					"command": "data_humidity"
+					"command": "Humidity"
 				},
 				{
 					"title": "View LIDAR",
 					"type": "command",
-					"command": "data_lidar"
+					"command": "LIDAR"
 				},
 				{
 					"title": "View Speed",
 					"type": "command",
-					"command": "data_speed"
+					"command": "Speed"
 				},
 				{
 					"title": "View Steering Angle",
 					"type": "command",
-					"command": "data_steering_angle"
+					"command": "SteeringAngle"
 				},
 				{
 					"title": "View Temperature",
 					"type": "command",
-					"command": "data_temperature"
+					"command": "Temperature"
 				}
 			]
 		},
@@ -148,22 +148,22 @@
 				{
 					"title": "Topic: local/#",
 					"type": "command",
-					"command": "topic_local"
+					"command": "local/#"
 				},
 				{
 					"title": "Topic: local/sensor",
 					"type": "command",
-					"command": "topic_local_sensor"
+					"command": "local/sensor"
 				},
 				{
 					"title": "Topic: local/com2/car",
 					"type": "command",
-					"command": "topic_local_com2_car"
+					"command": "local/com2/car"
 				},
 				{
 					"title": "Topic: local/com2/web",
 					"type": "command",
-					"command": "topic_local_com2_web"
+					"command": "local/com2/web"
 				}
 			]
 		},

@@ -3,7 +3,6 @@ import json
 import os
 import logging
 import signal
-import sys
 import time
 import threading
 import queue
@@ -90,9 +89,9 @@ class InternCom:
 			if _FINISH:
 				# exit if user ends skript
 				break
-		    ############
+			############
 			# com2/car #
-			############	
+			############
 			try:
 				com_msg = _com2_car_buf.get(block=False)
 			except queue.Empty:
@@ -143,7 +142,7 @@ class ExternCom:
 		self._client.message_callback_add(self.__sensor_topic, self._do_nothing)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
-		self._clienton_publish = self._on_publish
+		self._client.on_publish = self._on_publish
 		self._client.connect(host=self.__host,port=self.__port)
 		self._client.subscribe('V3/#', qos=2)
 		self.__logger_function("start MQTT client_extern")
@@ -189,7 +188,7 @@ class ExternCom:
 				break
 			##########
 			# sensor #
-			##########	
+			##########
 			# non-bocking get elemtent from queue with timeout 		
 			try:
 				sensor_msg = _sensor_buf.get(block=False)
@@ -202,9 +201,9 @@ class ExternCom:
 				self._client.publish(self.__sensor_topic, str(sensor_msg), qos = 0)
 				# tell queue that task is done
 				_sensor_buf.task_done()
-		    ############
+			############
 			# com2/web #
-			############	
+			############
 			try:
 				com_msg = _com2_web_buf.get(block=False)
 			except queue.Empty:

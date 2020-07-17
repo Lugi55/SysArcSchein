@@ -1,2 +1,0 @@
-/SysArch/V3/sensor {'SensorValue1': [{'name': 'Humidity', 'timestamp': 1595018177.2537384, 'value': 62.3947692431115}, {'name': 'Temperature', 'timestamp': 1595018177.253633, 'value': 53.7}], 'SensorValue3': [{'name': 'Acceleration', 'timestamp': 1595018177.258011, 'valueX': -0.13847, 'valueY': 0.993202, 'valueZ': -0.082228}, {'name': 'Gyro', 'timestamp': 1595018177.2622058, 'valueX': 2.205, 'valueY': -5.845, 'valueZ': -3.115}]}
-
