@@ -96,11 +96,11 @@ class Sensor():
 	def randomWalk(self,start,stop,dx,x):
 		if not self.login: dx = dx*10
 		if x<start:
-			return x + random.uniform(-dx,0)
-		if x>stop:
 			return x + random.uniform(0,dx)
+		if x>stop:
+			return x + random.uniform(-dx,0)
 		else:
-			return x + random.uniform(-1,1)
+			return x + random.uniform(-dx,dx)
 
 	def puplishAll(self):
 		#dummy dict
