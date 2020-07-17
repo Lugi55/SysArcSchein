@@ -60,7 +60,7 @@ class Sensor():
 	def on_subscribe(self,client,userdata,mid,graned_qos):
 		logging.info('SensorTask\t\tsubscribe to local/com2/car')
 
-	def on_con2web(self,tokenID):
+	def on_com2web(self,tokenID):
 		dict = {
 			"timestamp":time.time(),
 			"tokenID":tokenID,
@@ -72,7 +72,7 @@ class Sensor():
 	def on_RFID(self,client,userdata,msg):
 		logging.info('SenosrTask\t\tRFID message incoming')
 		dict = json.loads(msg.payload.decode('utf-8'))
-		self.on_con2web(dict['tokenID'])
+		self.on_com2web(dict['tokenID'])
 
 	def on_com2car(self,client,userdata,msg):
 		logging.info('SensorTask\t\ttry user login or logout')

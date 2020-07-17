@@ -14,8 +14,8 @@ import constants
 class InternCom:
 	__host = 'localhost'
 	__port = 1883
-	__con2_car_topic = 'local/con2/car'
-	__con2_web_topic = 'local/con2/web'
+	__com2_car_topic = 'local/com2/car'
+	__com2_web_topic = 'local/com2/web'
 	__sensor_topic = 'local/sensor'
 
 	def __init__(self):
@@ -33,8 +33,8 @@ class InternCom:
 	def init_mqtt_client(self):
 		self._client = paho.Client()
 		self._client.message_callback_add(self.__sensor_topic, self._on_sensor_message)
-		self._client.message_callback_add(self.__con2_web_topic, self._on_con2_web)
-		self._client.message_callback_add(self.__con2_car_topic, self._do_nothing)
+		self._client.message_callback_add(self.__com2_web_topic, self._on_com2_web)
+		self._client.message_callback_add(self.__com2_car_topic, self._do_nothing)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
 		self._client.connect(host=self.__host,port=self.__port)
@@ -70,41 +70,41 @@ class InternCom:
 				self.__overflow_file.write("deleted sensor messages = "+str(length)+"\n")
 				self.__logger_function("buffer: deleted messages = "+str(length))
 
-	def _on_con2_web(self, client, userdata, msg):
-		global _con2_web_buf
+	def _on_com2_web(self, client, userdata, msg):
+		global _com2_web_buf
 		try:
 			# blocking queque access
-			_con2_web_buf.put(json.loads(msg.payload.decode('utf-8')))
+			_com2_web_buf.put(json.loads(msg.payload.decode('utf-8')))
 		except queue.Full:
 			with lock:
-				_con2_car_buf.queue.clear()
-			self.__logger_function("con2_car_overflow")
+				_com2_car_buf.queue.clear()
+			self.__logger_function("com2_car_overflow")
 		# debug
 		with lock:
-			length = _con2_web_buf.qsize()
-			print("con2_web " +str(length))
+			length = _com2_web_buf.qsize()
+			print("com2_web " +str(length))
 
 	def __on_loop(self):
-		global _FINISH, _con2_car_buf
+		global _FINISH, _com2_car_buf
 		while True:
 			if _FINISH:
 				# exit if user ends skript
 				break
 		    ############
-			# con2/car #
+			# com2/car #
 			############	
 			try:
-				con_msg = _con2_car_buf.get(block=False)
+				com_msg = _com2_car_buf.get(block=False)
 			except queue.Empty:
 				# pass expected empty queue exception
-				con_msg = None
+				com_msg = None
 				pass
-			if con_msg is not None:
+			if com_msg is not None:
 				# send message from buffer
-				self._client.publish(self.__con2_car_topic, str(con_msg), qos = 2)
+				self._client.publish(self.__com2_car_topic, str(com_msg), qos = 2)
 				#print(rc)
 				# tell queue that task is done
-				_con2_car_buf.task_done()
+				_com2_car_buf.task_done()
 			# sleep
 			time.sleep(constants.measruementPeriodLogin / 10)
 
@@ -120,8 +120,8 @@ class ExternCom:
 	#__port = 1883
 	__host = '192.168.200.165'
 	__port = 8883
-	__con2_car_topic = 'V3/con2/car'
-	__con2_web_topic = 'V3/con2/web'
+	__com2_car_topic = 'V3/com2/car'
+	__com2_web_topic = 'V3/com2/web'
 	__sensor_topic = 'V3/sensor'
 	__user = 'V3'
 	__password = 'DE5'
@@ -137,8 +137,8 @@ class ExternCom:
 		self._client = paho.Client()
 		# username and password
 		self._client.username_pw_set(username=self.__user, password=self.__password)
-		self._client.message_callback_add(self.__con2_car_topic, self._on_con2_car)
-		self._client.message_callback_add(self.__con2_web_topic, self._do_nothing)
+		self._client.message_callback_add(self.__com2_car_topic, self._on_com2_car)
+		self._client.message_callback_add(self.__com2_web_topic, self._do_nothing)
 		self._client.message_callback_add(self.__sensor_topic, self._do_nothing)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
@@ -166,22 +166,22 @@ class ExternCom:
 	def _do_nothing(self, client, userdata, msg):
 		pass
 
-	def _on_con2_car(self, client, userdata, msg):
-		global _con2_car_buf
+	def _on_com2_car(self, client, userdata, msg):
+		global _com2_car_buf
 		try:
 			# blocking queque access
-			_con2_car_buf.put(json.loads(msg.payload.decode('utf-8')))
+			_com2_car_buf.put(json.loads(msg.payload.decode('utf-8')))
 		except queue.Full:
 			with lock:
-				_con2_car_buf.queue.clear()
-			self.__logger_function("con2_car_overflow")
+				_com2_car_buf.queue.clear()
+			self.__logger_function("com2_car_overflow")
 		# debug
 		with lock:
-			length = _con2_car_buf.qsize()
-			print("con2_car " +str(length))
+			length = _com2_car_buf.qsize()
+			print("com2_car " +str(length))
 	
 	def __on_loop(self):
-		global _FINISH, _sensor_buf, _con2_web_buf
+		global _FINISH, _sensor_buf, _com2_web_buf
 		while True:
 			if _FINISH:
 				# exit if user ends skript
@@ -202,20 +202,20 @@ class ExternCom:
 				# tell queue that task is done
 				_sensor_buf.task_done()
 		    ############
-			# con2/web #
+			# com2/web #
 			############	
 			try:
-				con_msg = _con2_web_buf.get(block=False)
+				com_msg = _com2_web_buf.get(block=False)
 			except queue.Empty:
 				# pass expected empty queue exception
-				con_msg = None
+				com_msg = None
 				pass
-			if con_msg is not None:
+			if com_msg is not None:
 				# send message from buffer
-				self._client.publish(self.__con2_web_topic, str(con_msg), qos = 2)
+				self._client.publish(self.__com2_web_topic, str(com_msg), qos = 2)
 				#print(rc)
 				# tell queue that task is done
-				_con2_web_buf.task_done()
+				_com2_web_buf.task_done()
 			# sleep
 			time.sleep(constants.measruementPeriodLogin / 10)
 
@@ -248,8 +248,8 @@ if __name__ == "__main__":
 	signal.signal(signal.SIGINT, signalHandler)
 	# create queues
 	_sensor_buf = queue.Queue()
-	_con2_web_buf = queue.Queue(10) # maxsize = 10
-	_con2_car_buf = queue.Queue(10) # maxsize = 10
+	_com2_web_buf = queue.Queue(10) # maxsize = 10
+	_com2_car_buf = queue.Queue(10) # maxsize = 10
 	# create communication objects
 	com_intern = InternCom()
 	com_extern = ExternCom()
