@@ -43,11 +43,11 @@ class Logger():
 		self.currentFileTime = datetime.datetime.now().replace(microsecond=0,second=0,minute=0)
 
 
-	def removeOldFiles():
+	def removeOldFiles(self):
 		file = []
 		for file in os.listdir('./LoggerData'):
 			if file.endswith('.log'):
-				files.append(file)
+				file.append(file) # Chris: before 'files.append(file)'
 		while len(file) > self.maxFiles:
 			os.remove('LoggerData/'+file[0])
 			logging.info('LoggerTask\t\tremove Logger File')

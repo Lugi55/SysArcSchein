@@ -37,14 +37,25 @@ def GUI(stdscr):
 		stdscr.addstr(1,2, menu['title'], curses.A_UNDERLINE) # Title for this menu
 		stdscr.addstr(3,2, menu['subtitle'], curses.A_BOLD) #Subtitle for this menu
 		for idx in range(len(menu_var['options'])):
+			#print_flag = True
 			if idx == current_row:
 				# print line with cursor
 				stdscr.attron(curses.color_pair(1))
-				stdscr.addstr(idx+4,4,'%d - %s' % (idx+1, menu_var['options'][idx]['title']))
+				#while print_flag:
+				try:
+					#print_flag = False
+					stdscr.addstr(idx+4,4,'%s - %s' % ('{:3}'.format(idx+1), menu_var['options'][idx]['title']))
+				except:
+					pass
 				stdscr.attroff(curses.color_pair(1))
 			else:
 				# print other lines
-				stdscr.addstr(idx+4,4,'%d - %s' % (idx+1, menu_var['options'][idx]['title']))
+				#while print_flag:
+				try:
+					#print_flag = False
+					stdscr.addstr(idx+4,4,'%s - %s' % ('{:3}'.format(idx+1), menu_var['options'][idx]['title']))
+				except:
+					pass
 
 	stdscr.clear()
 	curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)

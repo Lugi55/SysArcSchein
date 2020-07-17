@@ -1,25 +1,138 @@
 {
 	"title": "Vehicle 3 GUI",
 	"type": "menu",
-	"subtitle": "Please select an option... press ENTER to return to GUI",
+	"subtitle": "Please select an option...",
 	"options": [{
 			"title": "View Sensor Data",
 			"type": "menu",
-			"subtitle": "Sensor Data",
+			"subtitle": "Please select an option... press ENTER to return to GUI",
 			"options": [{
 					"title": "Back",
 					"type": "command",
 					"command": "BACK"
 				},
 				{
+					"title": "SensorValue3 Acceleration",
+					"type": "menu",
+					"subtitle": "Please select an option... press ENTER to return to GUI",
+					"options": [{
+							"title": "Back",
+							"type": "command",
+							"command": "BACK"
+						},
+						{
+							"title": "View all values",
+							"type": "command",
+							"command": "topic_local"
+						},
+						{
+							"title": "View valueX",
+							"type": "command",
+							"command": "topic_local_sensor"
+						},
+						{
+							"title": "View valueY",
+							"type": "command",
+							"command": "topic_local_con2_web"
+						},
+						{
+							"title": "View valueZ",
+							"type": "command",
+							"command": "topic_local_con2_car"
+						}
+					]
+				},
+				{
+					"title": "SensorValue3 Magnetometer",
+					"type": "menu",
+					"subtitle": "Please select an option... press ENTER to return to GUI",
+					"options": [{
+							"title": "Back",
+							"type": "command",
+							"command": "BACK"
+						},
+						{
+							"title": "View all values",
+							"type": "command",
+							"command": "topic_local"
+						},
+						{
+							"title": "View valueX",
+							"type": "command",
+							"command": "topic_local_sensor"
+						},
+						{
+							"title": "View valueY",
+							"type": "command",
+							"command": "topic_local_con2_web"
+						},
+						{
+							"title": "View valueZ",
+							"type": "command",
+							"command": "topic_local_con2_car"
+						}
+					]
+				},
+				{
+					"title": "SensorValue3 Gyro",
+					"type": "menu",
+					"subtitle": "Please select an option... press ENTER to return to GUI",
+					"options": [{
+							"title": "Back",
+							"type": "command",
+							"command": "BACK"
+						},
+						{
+							"title": "View all values",
+							"type": "command",
+							"command": "topic_local"
+						},
+						{
+							"title": "View valueX",
+							"type": "command",
+							"command": "topic_local_sensor"
+						},
+						{
+							"title": "View valueY",
+							"type": "command",
+							"command": "topic_local_con2_web"
+						},
+						{
+							"title": "View valueZ",
+							"type": "command",
+							"command": "topic_local_con2_car"
+						}
+					]
+				},
+				{
+					"title": "View Altimeter",
+					"type": "command",
+					"command": "data_altimeter"
+				},
+				{
+					"title": "View Humidity",
+					"type": "command",
+					"command": "data_humidity"
+				},
+				{
+					"title": "View LIDAR",
+					"type": "command",
+					"command": "data_lidar"
+				},
+				{
+					"title": "View Speed",
+					"type": "command",
+					"command": "data_speed"
+				},
+				{
+					"title": "View Steering Angle",
+					"type": "command",
+					"command": "data_steering_angle"
+				},
+				{
 					"title": "View Temperature",
 					"type": "command",
 					"command": "data_temperature"
-				},
-				{
-					"title": "Exit",
-					"type": "command",
-					"command": "Exit"
 				}
 			]
 		},
@@ -33,24 +146,24 @@
 					"command": "BACK"
 				},
 				{
-					"title": "local/#\t\tTopic",
+					"title": "Topic: local/#",
 					"type": "command",
 					"command": "topic_local"
 				},
 				{
-					"title": "local/sensor\tTopic",
+					"title": "Topic: local/sensor",
 					"type": "command",
 					"command": "topic_local_sensor"
 				},
 				{
-					"title": "local/con2/web\tTopic",
+					"title": "Topic: local/com2/car",
 					"type": "command",
-					"command": "topic_local_con2_web"
+					"command": "topic_local_com2_car"
 				},
 				{
-					"title": "local/con2/car\tTopic",
+					"title": "Topic: local/com2/web",
 					"type": "command",
-					"command": "topic_local_con2_car"
+					"command": "topic_local_com2_web"
 				}
 			]
 		},
