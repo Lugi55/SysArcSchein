@@ -106,7 +106,8 @@ class InternCom:
 				# tell queue that task is done
 				_com2_car_buf.task_done()
 			# sleep
-			time.sleep(constants.measruementPeriodLogin / 10)
+			#time.sleep(constants.measruementPeriodLogin / 10)
+			time.sleep(0.01)
 
 	#logger prints
 	def __logger_function(self, text):
@@ -120,9 +121,9 @@ class ExternCom:
 	#__port = 1883
 	__host = '192.168.200.165'
 	__port = 8883
-	__com2_car_topic = 'V3/com2/car'
-	__com2_web_topic = 'V3/com2/web'
-	__sensor_topic = 'V3/sensor'
+	__com2_car_topic = '/SysArch/V3/com2/car'
+	__com2_web_topic = '/SysArch/V3/com2/web'
+	__sensor_topic = '/SysArch/V3/sensor'
 	__user = 'V3'
 	__password = 'DE5'
 
@@ -217,7 +218,8 @@ class ExternCom:
 				# tell queue that task is done
 				_com2_web_buf.task_done()
 			# sleep
-			time.sleep(constants.measruementPeriodLogin / 10)
+			#time.sleep(constants.measruementPeriodLogin / 10)
+			time.sleep(0.01)
 
 	#logger prints
 	def __logger_function(self, text):
