@@ -14,6 +14,9 @@ import constants
 class InternCom:
 	__host = 'localhost'
 	__port = 1883
+	__con2_car_topic = 'local/con2/car'
+	__con2_web_topic = 'local/con2/web'
+	__sensor_topic = 'local/sensor'
 
 	def __init__(self):
 		self.__logger_function("object created")
@@ -29,9 +32,9 @@ class InternCom:
 
 	def init_mqtt_client(self):
 		self._client = paho.Client()
-		self._client.message_callback_add('local/sensor', self._on_sensor_message)
-		self._client.message_callback_add('local/con2/web', self._on_con2_web)
-		self._client.message_callback_add('local/con2/car', self._do_nothing)
+		self._client.message_callback_add(self.__sensor_topic, self._on_sensor_message)
+		self._client.message_callback_add(self.__con2_web_topic, self._on_con2_web)
+		self._client.message_callback_add(self.__con2_car_topic, self._do_nothing)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
 		self._client.connect(host=self.__host,port=self.__port)
@@ -98,7 +101,7 @@ class InternCom:
 				pass
 			if con_msg is not None:
 				# send message from buffer
-				self._client.publish("local/con2/car", str(con_msg), qos = 2)
+				self._client.publish(self.__con2_car_topic, str(con_msg), qos = 2)
 				#print(rc)
 				# tell queue that task is done
 				_con2_car_buf.task_done()
@@ -113,10 +116,15 @@ class InternCom:
 
 # class for external communication
 class ExternCom:
-	__host = 'localhost'
-	__port = 1883
-	#__qos = 0
-	#__topic = 'V3/sensor'
+	#__host = 'localhost'
+	#__port = 1883
+	__host = '192.168.200.165'
+	__port = 8883
+	__con2_car_topic = 'V3/con2/car'
+	__con2_web_topic = 'V3/con2/web'
+	__sensor_topic = 'V3/sensor'
+	__user = 'V3'
+	__password = 'DE5'
 
 	def __init__(self):
 		self.__logger_function("object created")
@@ -127,9 +135,11 @@ class ExternCom:
 
 	def init_mqtt_client(self):
 		self._client = paho.Client()
-		self._client.message_callback_add('V3/con2/car', self._on_con2_car)
-		self._client.message_callback_add('V3/con2/web', self._do_nothing)
-		self._client.message_callback_add('V3/sensor', self._do_nothing)
+		# username and password
+		self._client.username_pw_set(username=self.__user, password=self.__password)
+		self._client.message_callback_add(self.__con2_car_topic, self._on_con2_car)
+		self._client.message_callback_add(self.__con2_web_topic, self._do_nothing)
+		self._client.message_callback_add(self.__sensor_topic, self._do_nothing)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
 		self._clienton_publish = self._on_publish
@@ -188,7 +198,7 @@ class ExternCom:
 				pass
 			if sensor_msg is not None:
 				# send message from buffer
-				self._client.publish("V3/sensor", str(sensor_msg), qos = 0)
+				self._client.publish(self.__sensor_topic, str(sensor_msg), qos = 0)
 				# tell queue that task is done
 				_sensor_buf.task_done()
 		    ############
@@ -202,7 +212,7 @@ class ExternCom:
 				pass
 			if con_msg is not None:
 				# send message from buffer
-				self._client.publish("V3/con2/web", str(con_msg), qos = 2)
+				self._client.publish(self.__con2_web_topic, str(con_msg), qos = 2)
 				#print(rc)
 				# tell queue that task is done
 				_con2_web_buf.task_done()
@@ -228,8 +238,6 @@ def signalHandler(sig,frame):
 	print("exit t2")
 
 
-
-
 if __name__ == "__main__":
 	#define os priority
 	niceValue = os.nice(0)
@@ -240,8 +248,8 @@ if __name__ == "__main__":
 	signal.signal(signal.SIGINT, signalHandler)
 	# create queues
 	_sensor_buf = queue.Queue()
-	_con2_web_buf = queue.Queue()
-	_con2_car_buf = queue.Queue()
+	_con2_web_buf = queue.Queue(10) # maxsize = 10
+	_con2_car_buf = queue.Queue(10) # maxsize = 10
 	# create communication objects
 	com_intern = InternCom()
 	com_extern = ExternCom()
