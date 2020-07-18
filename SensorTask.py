@@ -109,31 +109,31 @@ class Sensor():
 		self.dict = {"SensorValue1":[],"SensorValue3":[]}
 		#Temperature
 		self.temp = self.vcgm.measure_temp()
-		self.tempDict = {"name":"Temperature","timestamp":time.time(),"value":round(self.temp,3)}
+		self.tempDict = {"name":"Temperature","timestamp":round(time.time(),6),"value":round(self.temp,3)}
 		#LIDAR
 		self.LIDAR = self.randomWalk(start=5,stop=150,dx=0.5,x=self.LIDAR)
-		self.LIDARDict = {"name":"LIDAR","timestamp":time.time(),"value":round(self.LIDAR,3)}
+		self.LIDARDict = {"name":"LIDAR","timestamp":round(time.time(),6),"value":round(self.LIDAR,3)}
 		#Speed
 		self.speed = self.randomWalk(start=0,stop=150,dx=0.5,x=self.speed)
-		self.speedDict = {"name":"Speed","timestamp":time.time(),"value":round(self.speed,3)}
+		self.speedDict = {"name":"Speed","timestamp":round(time.time(),6),"value":round(self.speed,3)}
 		#SteeringAngle
 		self.steeringAngle = self.randomWalk(start=5,stop=150,dx=0.5,x=self.steeringAngle)
-		self.steeringAngleDict = {"name":"steeringAngle","timestamp":time.time(),"value":round(self.steeringAngle,3)}
+		self.steeringAngleDict = {"name":"steeringAngle","timestamp":round(time.time(),6),"value":round(self.steeringAngle,3)}
 		#Altimeter
 		self.altimeter = self.lps25h.get_barometer_raw()
-		self.altimeterDict = {"name":"Altimeter","timestamp":time.time(),"value":round(self.altimeter,3)}
+		self.altimeterDict = {"name":"Altimeter","timestamp":round(time.time(),6),"value":round(self.altimeter,3)}
 		#Humidity
 		self.humidity = self.randomWalk(start=10,stop=95,dx=0.1,x=self.humidity)
-		self.humidityDict = {"name":"Humidity","timestamp":time.time(),"value":round(self.humidity,3)}
+		self.humidityDict = {"name":"Humidity","timestamp":round(time.time(),6),"value":round(self.humidity,3)}
 		#Acceleration
 		self.accel = self.lsm6ds33.get_accelerometer_g_forces()
-		self.accelDict = {"name":"Acceleration","timestamp":time.time(),"valueX":round(self.accel[0],3),"valueY":round(self.accel[1],3),"valueZ":round(self.accel[2],3)}
+		self.accelDict = {"name":"Acceleration","timestamp":round(time.time(),6),"valueX":round(self.accel[0],3),"valueY":round(self.accel[1],3),"valueZ":round(self.accel[2],3)}
 		#Gyro
 		self.gyro = self.lsm6ds33.get_gyro_angular_velocity()
-		self.gyroDict = {"name":"Gyro","timestamp":time.time(),"valueX":round(self.gyro[0],3),"valueY":round(self.gyro[1],3),"valueZ":round(self.gyro[2],3)}
+		self.gyroDict = {"name":"Gyro","timestamp":round(time.time(),6),"valueX":round(self.gyro[0],3),"valueY":round(self.gyro[1],3),"valueZ":round(self.gyro[2],3)}
 		#Magnetometer
 		self.mag = self.lis3mdl.get_magnetometer_raw()
-		self.magDict = {"name":"Magnetometer","timestamp":time.time(),"valueX":round(self.mag[0],3),"valueY":round(self.mag[1],3),"valueZ":round(self.mag[2],3)}
+		self.magDict = {"name":"Magnetometer","timestamp":round(time.time(),6),"valueX":round(self.mag[0],3),"valueY":round(self.mag[1],3),"valueZ":round(self.mag[2],3)}
 		#make big dict to publish
 		self.dict["SensorValue1"].append(self.humidityDict)
 		self.dict["SensorValue1"].append(self.tempDict)
@@ -155,16 +155,16 @@ class Sensor():
 		self.dict = {"SensorValue1":[],"SensorValue3":[]}
 		#Temperature
 		self.temp = self.vcgm.measure_temp()
-		self.tempDict = {"name":"Temperature","timestamp":time.time(),"value":round(self.temp,3)}
+		self.tempDict = {"name":"Temperature","timestamp":round(time.time(),6),"value":round(self.temp,3)}
 		#Humidity
 		self.humidity = self.randomWalk(start=10,stop=95,dx=0.1,x=self.humidity)
-		self.humidityDict = {"name":"Humidity","timestamp":time.time(),"value":round(self.humidity,3)}
+		self.humidityDict = {"name":"Humidity","timestamp":round(time.time(),6),"value":round(self.humidity,3)}
 		#Acceleration
 		self.accel = self.lsm6ds33.get_accelerometer_g_forces()
-		self.accelDict = {"name":"Acceleration","timestamp":time.time(),"valueX":round(self.accel[0],3),"valueY":round(self.accel[1],3),"valueZ":round(self.accel[2],3)}
+		self.accelDict = {"name":"Acceleration","timestamp":round(time.time(),6),"valueX":round(self.accel[0],3),"valueY":round(self.accel[1],3),"valueZ":round(self.accel[2],3)}
 		#Gyro
 		self.gyro = self.lsm6ds33.get_gyro_angular_velocity()
-		self.gyroDict = {"name":"Gyro","timestamp":time.time(),"valueX":round(self.gyro[0],3),"valueY":round(self.gyro[1],3),"valueZ":round(self.gyro[2],3)}
+		self.gyroDict = {"name":"Gyro","timestamp":round(time.time(),6),"valueX":round(self.gyro[0],3),"valueY":round(self.gyro[1],3),"valueZ":round(self.gyro[2],3)}
 		#make big dict to publish
 		self.dict["SensorValue1"].append(self.humidityDict)
 		self.dict["SensorValue1"].append(self.tempDict)
