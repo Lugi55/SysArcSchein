@@ -62,12 +62,13 @@ class Communication(abc.ABC):
 class InternCom(Communication):
 
 	def __init__(self):
-		super().__init__(self)
+		super().__init__()
 		self._host = 'localhost'
 		self._port = 1883
 		self._com2_car_topic = 'local/com2/car'
 		self._com2_web_topic = 'local/com2/web'
 		self._sensor_topic = 'local/sensor'
+		self._RFID_topic = 'local/RFID'
 		
 		self.__overflow_file = open('LoggerData/overflow.log','a')
 
@@ -78,6 +79,7 @@ class InternCom(Communication):
 		self._client.message_callback_add(self._sensor_topic, self._on_sensor_message)
 		self._client.message_callback_add(self._com2_web_topic, self._on_com2_web)
 		self._client.message_callback_add(self._com2_car_topic, self._do_nothing)
+		self._client.message_callback_add(self._RFID_topic, self._do_nothing)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
 		self._client.on_publish = self._on_publish
@@ -151,8 +153,7 @@ class InternCom(Communication):
 class ExternCom(Communication):
 
 	def __init__(self):
-		super().__init__(self)
-		self._logger_function("object created")
+		super().__init__()
 		#self._host = 'localhost'
 		#self._port = 1883
 		self._host = '192.168.200.165'

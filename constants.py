@@ -1,5 +1,5 @@
 
-measurementPeriodLogin = 0.1
-measurementPeriodLogout = 1
+measurementPeriodLogin = 0.5
+measurementPeriodLogout = 5
 sensorBufferSize = 100
 loginBufferSize = 10
