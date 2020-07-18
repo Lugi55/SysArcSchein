@@ -67,7 +67,7 @@ class Sensor():
 			"tokenID":tokenID,
 			"login":not self.login
 			}
-		self.client.publish('local/com2web',json.dumps(dict), qos = 2)
+		self.client.publish('local/com2/web',json.dumps(dict), qos = 2)
 		print(dict)
 
 	def on_RFID(self,client,userdata,msg):
@@ -110,14 +110,14 @@ class Sensor():
 		self.temp = self.vcgm.measure_temp()
 		self.tempDict = {"name":"Temperature","timestamp":time.time(),"value":self.temp}
 		#LIDAR
-		self.LIDAR += self.randomWalk(start=5,stop=150,dx=0.5,x=self.LIDAR)
+		self.LIDAR = self.randomWalk(start=5,stop=150,dx=0.5,x=self.LIDAR)
 		self.LIDARDict = {"name":"LIDAR","timestamp":time.time(),"value":self.LIDAR}
 		#Speed
-		self.speed += self.randomWalk(start=0,stop=150,dx=0.5,x=self.speed)
+		self.speed = self.randomWalk(start=0,stop=150,dx=0.5,x=self.speed)
 		self.speedDict = {"name":"Speed","timestamp":time.time(),"value":self.speed}
 		#SteeringAngle
 		self.steeringAngle += self.randomWalk(start=5,stop=150,dx=0.5,x=self.steeringAngle)
-		self.steeringAngleDict = {"name":"LIDAR","timestamp":time.time(),"value":self.steeringAngle}
+		self.steeringAngleDict = {"name":"steeringAngle","timestamp":time.time(),"value":self.steeringAngle}
 		#Altimeter
 		self.altimeter = self.lps25h.get_barometer_raw()
 		self.altimeterDict = {"name":"Altimeter","timestamp":time.time(),"value":self.altimeter}
@@ -144,7 +144,7 @@ class Sensor():
 		self.dict["SensorValue3"].append(self.gyroDict)
 		self.dict["SensorValue3"].append(self.magDict)
 		#publish to local Brocker
-		self.client.publish('local/sensor', json.dumps(self.dict), qos = 0)
+		self.client.publish("local/sensor", json.dumps(self.dict), qos = 0)
 		#when not login 1s measurement frequency
 		self.next_call = self.next_call+constants.measurementPeriodLogin
 		time.sleep(self.next_call - time.time())
@@ -170,7 +170,7 @@ class Sensor():
 		self.dict["SensorValue3"].append(self.accelDict)
 		self.dict["SensorValue3"].append(self.gyroDict)
 		#publish to local Brocker
-		self.client.publish('local/sensor', json.dumps(self.dict), qos = 0)
+		self.client.publish("local/sensor", json.dumps(self.dict), qos = 0)
 		#when not login 1s measurement frequency
 		self.next_call = self.next_call+constants.measurementPeriodLogout
 		time.sleep(self.next_call - time.time())
