@@ -218,6 +218,8 @@ if __name__ == '__main__':
 			display_topic(rc_list[0])
 		elif rc_list[0] == 'local/sensor':
 			display_topic(rc_list[0])
+		elif rc_list[0] == 'local/com2/#':
+			display_topic(rc_list[0])
 		elif rc_list[0] == 'local/com2/car':
 			display_topic(rc_list[0])
 		elif rc_list[0] == 'local/com2/web':

@@ -7,51 +7,42 @@ import time
 import threading
 import queue
 import constants
+import abc
 
 
-# class for internal communication
-class InternCom:
-	__host = 'localhost'
-	__port = 1883
-	__com2_car_topic = 'local/com2/car'
-	__com2_web_topic = 'local/com2/web'
-	__sensor_topic = 'local/sensor'
+class Communication(abc.ABC):
+	_host = None
+	_port = None
+	_com2_car_topic = None
+	_com2_web_topic = None
+	_sensor_topic = None
+	_client = None
 
 	def __init__(self):
-		self.__logger_function("object created")
-		# open / ceate file for overflow notation
-		self.__overflow_file = open('LoggerData/overflow.log','a')
+		self._logger_function("object created")
 
+	# abstract methods	
+	@abc.abstractmethod
+	def init_mqtt_client(self):
+		pass
+
+	@abc.abstractmethod
+	def _on_loop(self):
+		pass
+
+	# end paho loop
 	def end_client(self):
 		self._client.loop_stop()
-		self.__logger_function("program stopped")
+		self._logger_function("program stopped")
 
-	def set_flag(self, flag):
-		self.__flag = flag
-
-	def init_mqtt_client(self):
-		self._client = paho.Client()
-		self._client.message_callback_add(self.__sensor_topic, self._on_sensor_message)
-		self._client.message_callback_add(self.__com2_web_topic, self._on_com2_web)
-		self._client.message_callback_add(self.__com2_car_topic, self._do_nothing)
-		self._client.on_message = self._on_message
-		self._client.on_subscribe = self._on_subscribe
-		self._client.on_publish = self._on_publish
-		try: 
-			self._client.connect(host=self.__host,port=self.__port)
-		except:
-			self.__logger_function("connection failed - end thread")
-			return
-		self._client.subscribe(topic='local/#')
-		self.__logger_function("start MQTT client")
-		# NON bloking start of MQTT Client
-		self._client.loop_start()
-		# start loop function
-		self.__on_loop()
+	#logger prints
+	def _logger_function(self, text):
+		logging.info('CommunicationTask\t'+ str(self.__class__.__name__) +': '+text)
+		print(text)
 
 	#callback funktions
 	def _on_subscribe(self, client, userdata, mid, granted_qos):
-		self.__logger_function("subscribed")
+		self._logger_function("subscribed")
 
 	def _on_publish(self, client, userdata, result):
 		#print("data published")
@@ -59,10 +50,46 @@ class InternCom:
 
 	def _on_message(self, client, userdata, msg):
 		# logg unexpected message
-		self.__logger_function("unexpected message" + msg.payload.decode('utf-8'))
+		self._logger_function("unexpected message" + msg.payload.decode('utf-8'))
 
 	def _do_nothing(self, client, userdata, msg):
 		pass
+
+
+
+
+# class for internal communication
+class InternCom(Communication):
+	_host = 'localhost'
+	_port = 1883
+	_com2_car_topic = 'local/com2/car'
+	_com2_web_topic = 'local/com2/web'
+	_sensor_topic = 'local/sensor'
+
+	def __init__(self):
+		self.__overflow_file = open('LoggerData/overflow.log','a')
+
+
+	def init_mqtt_client(self):
+		self._client = paho.Client()
+		self._client.message_callback_add(self._sensor_topic, self._on_sensor_message)
+		self._client.message_callback_add(self._com2_web_topic, self._on_com2_web)
+		self._client.message_callback_add(self._com2_car_topic, self._do_nothing)
+		self._client.on_message = self._on_message
+		self._client.on_subscribe = self._on_subscribe
+		self._client.on_publish = self._on_publish
+		try: 
+			self._client.connect(host=self._host,port=self._port)
+		except:
+			self._logger_function("connection failed - end thread")
+			return
+		self._client.subscribe(topic='local/#')
+		self._logger_function("start MQTT client")
+		# NON bloking start of MQTT Client
+		self._client.loop_start()
+		# start loop function
+		self._on_loop()
+
 
 	def _on_sensor_message(self, client, userdata, msg):
 		global _sensor_buf
@@ -76,7 +103,7 @@ class InternCom:
 				# delete all elements in queue
 				_sensor_buf.queue.clear()
 				self.__overflow_file.write("deleted sensor messages = "+str(length)+"\n")
-				self.__logger_function("buffer: deleted messages = "+str(length))
+				self._logger_function("buffer: deleted messages = "+str(length))
 
 	def _on_com2_web(self, client, userdata, msg):
 		global _com2_web_buf
@@ -89,9 +116,9 @@ class InternCom:
 			if length >= constants.loginBufferSize:
 				# delete all elements in queue
 				_com2_web_buf.queue.clear()
-				self.__logger_function("com2_web overflow... messages deleted: " + str(length))
+				self._logger_function("com2_web overflow... messages deleted: " + str(length))
 
-	def __on_loop(self):
+	def _on_loop(self):
 		global _FINISH, _com2_car_buf
 		while True:
 			if _FINISH:
@@ -108,63 +135,59 @@ class InternCom:
 				pass
 			if com_msg is not None:
 				# send message from buffer
-				self._client.publish(self.__com2_car_topic, str(com_msg), qos = 2)
+				self._client.publish(self._com2_car_topic, str(com_msg), qos = 2)
 				#print(rc)
 				# tell queue that task is done
 				_com2_car_buf.task_done()
 			# sleep
 			time.sleep(constants.measurementPeriodLogin / 10)
 
-	#logger prints
-	def __logger_function(self, text):
-		logging.info('CommunicationTask\tInternCom: '+text)
-		print(text)
 
 
 # class for external communication
 class ExternCom:
-#	__host = 'localhost'
-#	__port = 1883
-	__host = '192.168.200.165'
-	__port = 8883
-	__com2_car_topic = '/SysArch/V3/com2/car'
-	__com2_web_topic = '/SysArch/V3/com2/web'
-	__sensor_topic = '/SysArch/V3/sensor'
+#	_host = 'localhost'
+#	_port = 1883
+	_host = '192.168.200.165'
+	_port = 8883
+	_com2_car_topic = '/SysArch/V3/com2/car'
+	_com2_web_topic = '/SysArch/V3/com2/web'
+	_sensor_topic = '/SysArch/V3/sensor'
 	__user = 'V3'
 	__password = 'DE5'
 
 	def __init__(self):
-		self.__logger_function("object created")
+		self._logger_function("object created")
 	
 	def end_client(self):
 		self._client.loop_stop()
-		self.__logger_function("program stopped")
+		self._logger_function("program stopped")
 
 	def init_mqtt_client(self):
 		self._client = paho.Client()
 		# username and password
 		self._client.username_pw_set(username=self.__user, password=self.__password)
-		self._client.message_callback_add(self.__com2_car_topic, self._on_com2_car)
-		self._client.message_callback_add(self.__com2_web_topic, self._do_nothing)
-		self._client.message_callback_add(self.__sensor_topic, self._do_nothing)
+		self._client.message_callback_add(self._com2_car_topic, self._on_com2_car)
+		self._client.message_callback_add(self._com2_web_topic, self._do_nothing)
+		self._client.message_callback_add(self._sensor_topic, self._do_nothing)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
 		self._client.on_publish = self._on_publish
 		try:
-		 	self._client.connect(host=self.__host,port=self.__port)
+		 	self._client.connect(host=self._host,port=self._port)
 		except:
-			self.__logger_function("connection failed - end thread")
+			self._logger_function("connection failed - end thread")
 			return
 		self._client.subscribe('/SysArch/V3/#', qos=2)
-		self.__logger_function("start MQTT client_extern")
+		self._logger_function("start MQTT client_extern")
 		# NON bloking start of MQTT Client
 		self._client.loop_start()
 		# start loop function
-		self.__on_loop()
+		self._on_loop()
 
 	#callback funktions
 	def _on_subscribe(self, client, userdata, mid, granted_qos):
-		self.__logger_function("subscribed")
+		self._logger_function("subscribed")
 		print(dict)
 
 	def _on_publish(self, client, userdata, result):
@@ -173,7 +196,7 @@ class ExternCom:
 
 	def _on_message(self, client, userdata, msg):
 		# logg unexpected message
-		self.__logger_function("unexpected message" + msg.payload.decode('utf-8'))
+		self._logger_function("unexpected message" + msg.payload.decode('utf-8'))
 
 	def _do_nothing(self, client, userdata, msg):
 		pass
@@ -189,9 +212,9 @@ class ExternCom:
 			if length >= constants.loginBufferSize:
 				# delete all elements in queue
 				_com2_car_buf.queue.clear()
-				self.__logger_function("com2_car overflow... messages deleted: " + str(length))
+				self._logger_function("com2_car overflow... messages deleted: " + str(length))
 	
-	def __on_loop(self):
+	def _on_loop(self):
 		global _FINISH, _sensor_buf, _com2_web_buf
 		while True:
 			if _FINISH:
@@ -209,7 +232,7 @@ class ExternCom:
 				pass
 			if sensor_msg is not None:
 				# send message from buffer
-				self._client.publish(self.__sensor_topic, str(sensor_msg), qos = 0)
+				self._client.publish(self._sensor_topic, str(sensor_msg), qos = 0)
 				# tell queue that task is done
 				_sensor_buf.task_done()
 			############
@@ -223,7 +246,7 @@ class ExternCom:
 				pass
 			if com_msg is not None:
 				# send message from buffer
-				self._client.publish(self.__com2_web_topic, str(com_msg), qos = 2)
+				self._client.publish(self._com2_web_topic, str(com_msg), qos = 2)
 				#print(rc)
 				# tell queue that task is done
 				_com2_web_buf.task_done()
@@ -231,7 +254,7 @@ class ExternCom:
 			time.sleep(constants.measurementPeriodLogin / 10)
 
 	#logger prints
-	def __logger_function(self, text):
+	def _logger_function(self, text):
 		logging.info('CommunicationTask\tExternCom: '+text)
 		print(text)
 
