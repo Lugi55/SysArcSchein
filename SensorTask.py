@@ -110,10 +110,10 @@ class Sensor():
 		self.temp = self.vcgm.measure_temp()
 		self.tempDict = {"name":"Temperature","timestamp":time.time(),"value":self.temp}
 		#LIDAR
-		self.LIDAR += self.randomWalk(start=5,stop=150,dx=0.5,x=self.LIDAR)
+		self.LIDAR = self.randomWalk(start=5,stop=150,dx=0.5,x=self.LIDAR)
 		self.LIDARDict = {"name":"LIDAR","timestamp":time.time(),"value":self.LIDAR}
 		#Speed
-		self.speed += self.randomWalk(start=0,stop=150,dx=0.5,x=self.speed)
+		self.speed = self.randomWalk(start=0,stop=150,dx=0.5,x=self.speed)
 		self.speedDict = {"name":"Speed","timestamp":time.time(),"value":self.speed}
 		#SteeringAngle
 		self.steeringAngle += self.randomWalk(start=5,stop=150,dx=0.5,x=self.steeringAngle)
