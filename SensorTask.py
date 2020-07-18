@@ -2,6 +2,7 @@ from IMU.lis3mdl import LIS3MDL
 from IMU.lps25h import LPS25H
 from IMU.lsm6ds33 import LSM6DS33
 from vcgencmd import Vcgencmd
+from filelock import FileLock
 import paho.mqtt.client as paho
 import logging
 import os
@@ -75,6 +76,17 @@ class Sensor():
 		logging.info('SenosrTask\t\tRFID message incoming')
 		dict = json.loads(msg.payload.decode('utf-8'))
 		self.on_com2web(dict['tokenID'])
+		
+	def userLoginLogout(self,dict)
+		with FileLock("user.txt.lock"):
+			logging.info('SensorTask\t\tuser.txt modified')
+    			with open("myfile.txt",'w') as file:
+				if self.login:
+					file.write(json.dumps(dict))
+				else:
+					file.wirte('')
+				
+	
 
 	def on_com2car(self,client,userdata,msg):
 		logging.info('SensorTask\t\ttry user login or logout')
@@ -83,6 +95,7 @@ class Sensor():
 			logging.info('SensorTask\t\tuser login succesfull')
 			self.userName = dict["user"]["userName"]
 			self.login = True
+			self.userLoginLogout(dict)
 		if self.login == False and dict["login"]==False:
 			logging.info('SensorTask\t\tno user to unlog')
 		if self.login == False and dict["login"]==True and dict["certified"]==False:
@@ -93,6 +106,8 @@ class Sensor():
 			logging.info('SensorTask\t\tuser logout succesfull')
 			self.userName = None
 			self.login = False
+			self.userLoginLogout(dict)
+			
 
 
 	def randomWalk(self,start,stop,dx,x):
