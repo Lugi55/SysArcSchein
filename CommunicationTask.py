@@ -67,7 +67,7 @@ class InternCom:
 	def _on_sensor_message(self, client, userdata, msg):
 		global _sensor_buf
 		# blocking queque access
-		_sensor_buf.put(json.loads(msg.payload.decode('utf-8')))
+		_sensor_buf.put(msg)
 		# avoid race condition with threadlock
 		with lock:
 			length = _sensor_buf.qsize()
@@ -81,7 +81,7 @@ class InternCom:
 	def _on_com2_web(self, client, userdata, msg):
 		global _com2_web_buf
 		# blocking queque access
-		_com2_web_buf.put(json.loads(msg.payload.decode('utf-8')))
+		_com2_web_buf.put(msg)
 		# debug
 		with lock:
 			length = _com2_web_buf.qsize()
@@ -108,7 +108,7 @@ class InternCom:
 				pass
 			if com_msg is not None:
 				# send message from buffer
-				self._client.publish(self.__com2_car_topic, str(com_msg), qos = 2)
+				self._client.publish(self.__com2_car_topic, com_msg.payload, qos = 2)
 				#print(rc)
 				# tell queue that task is done
 				_com2_car_buf.task_done()
@@ -181,7 +181,7 @@ class ExternCom:
 	def _on_com2_car(self, client, userdata, msg):
 		global _com2_car_buf
 		# blocking queque access
-		_com2_car_buf.put(json.loads(msg.payload.decode('utf-8')))
+		_com2_car_buf.put(msg)
 		# debug
 		with lock:
 			length = _com2_car_buf.qsize()
@@ -209,7 +209,7 @@ class ExternCom:
 				pass
 			if sensor_msg is not None:
 				# send message from buffer
-				self._client.publish(self.__sensor_topic, str(sensor_msg), qos = 0)
+				self._client.publish(self.__sensor_topic, sensor_msg.payload, qos = 0)
 				# tell queue that task is done
 				_sensor_buf.task_done()
 			############
@@ -223,7 +223,7 @@ class ExternCom:
 				pass
 			if com_msg is not None:
 				# send message from buffer
-				self._client.publish(self.__com2_web_topic, str(com_msg), qos = 2)
+				self._client.publish(self.__com2_web_topic, com_msg.payload, qos = 2)
 				#print(rc)
 				# tell queue that task is done
 				_com2_web_buf.task_done()
