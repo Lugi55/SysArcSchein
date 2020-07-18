@@ -117,7 +117,7 @@ class Sensor():
 		self.speedDict = {"name":"Speed","timestamp":time.time(),"value":self.speed}
 		#SteeringAngle
 		self.steeringAngle += self.randomWalk(start=5,stop=150,dx=0.5,x=self.steeringAngle)
-		self.steeringAngleDict = {"name":"LIDAR","timestamp":time.time(),"value":self.steeringAngle}
+		self.steeringAngleDict = {"name":"steeringAngle","timestamp":time.time(),"value":self.steeringAngle}
 		#Altimeter
 		self.altimeter = self.lps25h.get_barometer_raw()
 		self.altimeterDict = {"name":"Altimeter","timestamp":time.time(),"value":self.altimeter}
