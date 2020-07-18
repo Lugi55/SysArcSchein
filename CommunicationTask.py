@@ -24,7 +24,7 @@ class InternCom:
 
 	def end_client(self):
 		self._client.loop_stop()
-		self.__logger_function("client loop ended by user")
+		self.__logger_function("program stopped")
 
 	def set_flag(self, flag):
 		self.__flag = flag
@@ -36,7 +36,12 @@ class InternCom:
 		self._client.message_callback_add(self.__com2_car_topic, self._do_nothing)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
-		self._client.connect(host=self.__host,port=self.__port)
+		self._client.on_publish = self._on_publish
+		try: 
+			self._client.connect(host=self.__host,port=self.__port)
+		except:
+			self.__logger_function("connection failed - end thread")
+			return
 		self._client.subscribe(topic='local/#')
 		self.__logger_function("start MQTT client")
 		# NON bloking start of MQTT Client
@@ -47,6 +52,10 @@ class InternCom:
 	#callback funktions
 	def _on_subscribe(self, client, userdata, mid, granted_qos):
 		self.__logger_function("subscribed")
+
+	def _on_publish(self, client, userdata, result):
+		#print("data published")
+		pass
 
 	def _on_message(self, client, userdata, msg):
 		# logg unexpected message
@@ -71,17 +80,16 @@ class InternCom:
 
 	def _on_com2_web(self, client, userdata, msg):
 		global _com2_web_buf
-		try:
-			# blocking queque access
-			_com2_web_buf.put(json.loads(msg.payload.decode('utf-8')))
-		except queue.Full:
-			with lock:
-				_com2_car_buf.queue.clear()
-			self.__logger_function("com2_car_overflow")
+		# blocking queque access
+		_com2_web_buf.put(json.loads(msg.payload.decode('utf-8')))
 		# debug
 		with lock:
 			length = _com2_web_buf.qsize()
 			print("com2_web " +str(length))
+			if length >= constants.loginBufferSize:
+				# delete all elements in queue
+				_com2_web_buf.queue.clear()
+				self.__logger_function("com2_web overflow... messages deleted: " + str(length))
 
 	def __on_loop(self):
 		global _FINISH, _com2_car_buf
@@ -105,8 +113,7 @@ class InternCom:
 				# tell queue that task is done
 				_com2_car_buf.task_done()
 			# sleep
-			#time.sleep(constants.measruementPeriodLogin / 10)
-			time.sleep(0.01)
+			time.sleep(constants.measurementPeriodLogin / 10)
 
 	#logger prints
 	def __logger_function(self, text):
@@ -116,8 +123,8 @@ class InternCom:
 
 # class for external communication
 class ExternCom:
-	#__host = 'localhost'
-	#__port = 1883
+#	__host = 'localhost'
+#	__port = 1883
 	__host = '192.168.200.165'
 	__port = 8883
 	__com2_car_topic = '/SysArch/V3/com2/car'
@@ -131,7 +138,7 @@ class ExternCom:
 	
 	def end_client(self):
 		self._client.loop_stop()
-		self.__logger_function("client loop ended by user")
+		self.__logger_function("program stopped")
 
 	def init_mqtt_client(self):
 		self._client = paho.Client()
@@ -143,8 +150,12 @@ class ExternCom:
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
 		self._client.on_publish = self._on_publish
-		self._client.connect(host=self.__host,port=self.__port)
-		self._client.subscribe('V3/#', qos=2)
+		try:
+		 	self._client.connect(host=self.__host,port=self.__port)
+		except:
+			self.__logger_function("connection failed - end thread")
+			return
+		self._client.subscribe('/SysArch/V3/#', qos=2)
 		self.__logger_function("start MQTT client_extern")
 		# NON bloking start of MQTT Client
 		self._client.loop_start()
@@ -157,7 +168,8 @@ class ExternCom:
 		print(dict)
 
 	def _on_publish(self, client, userdata, result):
-		print("data published")
+		#print("data published")
+		pass
 
 	def _on_message(self, client, userdata, msg):
 		# logg unexpected message
@@ -168,17 +180,16 @@ class ExternCom:
 
 	def _on_com2_car(self, client, userdata, msg):
 		global _com2_car_buf
-		try:
-			# blocking queque access
-			_com2_car_buf.put(json.loads(msg.payload.decode('utf-8')))
-		except queue.Full:
-			with lock:
-				_com2_car_buf.queue.clear()
-			self.__logger_function("com2_car_overflow")
+		# blocking queque access
+		_com2_car_buf.put(json.loads(msg.payload.decode('utf-8')))
 		# debug
 		with lock:
 			length = _com2_car_buf.qsize()
 			print("com2_car " +str(length))
+			if length >= constants.loginBufferSize:
+				# delete all elements in queue
+				_com2_car_buf.queue.clear()
+				self.__logger_function("com2_car overflow... messages deleted: " + str(length))
 	
 	def __on_loop(self):
 		global _FINISH, _sensor_buf, _com2_web_buf
@@ -217,8 +228,7 @@ class ExternCom:
 				# tell queue that task is done
 				_com2_web_buf.task_done()
 			# sleep
-			#time.sleep(constants.measruementPeriodLogin / 10)
-			time.sleep(0.01)
+			time.sleep(constants.measurementPeriodLogin / 10)
 
 	#logger prints
 	def __logger_function(self, text):
@@ -232,6 +242,7 @@ def signalHandler(sig,frame):
 	logging.info('CommunicationTask\tCtrl+C - killed by user')
 	com_intern.end_client()
 	com_extern.end_client()
+	print("this can take up to 60s ...")
 	_FINISH = True
 	t1.join()
 	print("exit t1")
@@ -249,8 +260,8 @@ if __name__ == "__main__":
 	signal.signal(signal.SIGINT, signalHandler)
 	# create queues
 	_sensor_buf = queue.Queue()
-	_com2_web_buf = queue.Queue(10) # maxsize = 10
-	_com2_car_buf = queue.Queue(10) # maxsize = 10
+	_com2_web_buf = queue.Queue()
+	_com2_car_buf = queue.Queue() 
 	# create communication objects
 	com_intern = InternCom()
 	com_extern = ExternCom()
@@ -262,9 +273,4 @@ if __name__ == "__main__":
 
 	t1.start()
 	t2.start()
-
-	# interpreter should not reach this area
-	logging.info('CommunicationTask\tThreading error') 
-
-
 

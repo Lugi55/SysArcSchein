@@ -8,6 +8,7 @@ import logging
 
 menu = None
 parent = []
+user_s = "-"
 
 disp = 0
 msg_name = None
@@ -40,27 +41,23 @@ def GUI(stdscr):
 		stdscr.clear()
 		try:
 			stdscr.addstr(1, 2, menu['title'], curses.A_UNDERLINE)  # Title for this menu
-			stdscr.addstr(3, 2, menu['subtitle'], curses.A_BOLD)  # Subtitle for this menu
+			stdscr.addstr(2, 2,"user: " + user_s) # print user 
+			stdscr.addstr(4, 2, menu['subtitle'], curses.A_BOLD)  # Subtitle for this menu
 		except:
 			pass
 		for idx in range(len(menu_var['options'])):
-			# print_flag = True
 			if idx == current_row:
 				# print line with cursor
 				stdscr.attron(curses.color_pair(1))
-				# while print_flag:
 				try:
-					# print_flag = False
-					stdscr.addstr(idx + 4, 4, '%s - %s' % ('{:3}'.format(idx + 1), menu_var['options'][idx]['title']))
+					stdscr.addstr(idx + 5, 4, '%s - %s' % ('{:3}'.format(idx + 1), menu_var['options'][idx]['title']))
 				except:
 					pass
 				stdscr.attroff(curses.color_pair(1))
 			else:
 				# print other lines
-				# while print_flag:
 				try:
-					# print_flag = False
-					stdscr.addstr(idx + 4, 4, '%s - %s' % ('{:3}'.format(idx + 1), menu_var['options'][idx]['title']))
+					stdscr.addstr(idx + 5, 4, '%s - %s' % ('{:3}'.format(idx + 1), menu_var['options'][idx]['title']))
 				except:
 					pass
 
@@ -83,7 +80,6 @@ def GUI(stdscr):
 			if menu['options'][current_row]['type'] == 'command':
 				if menu['options'][current_row]['command'] == 'BACK':
 					# view parent menu
-					# pfusch ...
 					time_parent = int(round(time.time() * 1000))  # in ms
 					updateMenu(current_row, parent.pop(-1))
 				else:
@@ -92,7 +88,6 @@ def GUI(stdscr):
 			# if type is 'menu'
 			if menu['options'][current_row]['type'] == 'menu':
 				# access submenu
-				# ... pfusch
 				if int(round(time.time() * 1000)) - time_parent > 10:
 					updateMenu(current_row, menu['options'][current_row], menu)  # display the submenu
 					current_row = 0
