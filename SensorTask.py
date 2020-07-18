@@ -11,6 +11,7 @@ import signal
 import sys
 import random
 import constants
+import numpy as np
 
 def main():
 	#init logging module
@@ -53,10 +54,10 @@ class Sensor():
 		self.client.loop_start()
 
 		#init some sensor values
-		self.humidity = 40
-		self.speed = 0
-		self.steeringAngle = 0
-		self.LIDAR = 10
+		self.humidity = np.float32(40)
+		self.speed = np.float32(0)
+		self.steeringAngle = np.float32(0)
+		self.LIDAR = np.float32(10)
 
 	def on_subscribe(self,client,userdata,mid,graned_qos):
 		logging.info('SensorTask\t\tsubscribe to local/com2/car')
@@ -132,7 +133,7 @@ class Sensor():
 		self.gyroDict = {"name":"Gyro","timestamp":time.time(),"valueX":self.gyro[0],"valueY":self.gyro[1],"valueZ":self.gyro[2]}
 		#Magnetometer
 		self.mag = self.lis3mdl.get_magnetometer_raw()
-		self.magDict = {"name":"Magnetometer","timestmap":time.time(),"valueX":self.mag[0],"valueY":self.mag[1],"valueZ":self.mag[2]}
+		self.magDict = {"name":"Magnetometer","timestamp":time.time(),"valueX":self.mag[0],"valueY":self.mag[1],"valueZ":self.mag[2]}
 		#make big dict to publish
 		self.dict["SensorValue1"].append(self.humidityDict)
 		self.dict["SensorValue1"].append(self.tempDict)
