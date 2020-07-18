@@ -132,7 +132,7 @@ class Sensor():
 		self.gyroDict = {"name":"Gyro","timestamp":time.time(),"valueX":self.gyro[0],"valueY":self.gyro[1],"valueZ":self.gyro[2]}
 		#Magnetometer
 		self.mag = self.lis3mdl.get_magnetometer_raw()
-		self.magDict = {"name":"Magnetometer","timestmap":time.time(),"valueX":self.mag[0],"valueY":self.mag[1],"valueZ":self.mag[2]}
+		self.magDict = {"name":"Magnetometer","timestamp":time.time(),"valueX":self.mag[0],"valueY":self.mag[1],"valueZ":self.mag[2]}
 		#make big dict to publish
 		self.dict["SensorValue1"].append(self.humidityDict)
 		self.dict["SensorValue1"].append(self.tempDict)
