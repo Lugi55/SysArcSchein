@@ -67,7 +67,7 @@ class Sensor():
 			"tokenID":tokenID,
 			"login":not self.login
 			}
-		self.client.publish('local/com2web',json.dumps(dict), qos = 2)
+		self.client.publish('local/com2/web',json.dumps(dict), qos = 2)
 		print(dict)
 
 	def on_RFID(self,client,userdata,msg):
