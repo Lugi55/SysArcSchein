@@ -5,10 +5,12 @@ import json
 import curses
 import sys
 import logging
+import constants
 
 menu = None
 parent = []
 user_s = "-"
+login_status = False
 
 disp = 0
 msg_name = None
@@ -18,7 +20,7 @@ value3_type = None
 last_stamp = 0
 drift = 0
 drift_flag = False
-format_param = '{:016.6f}'
+format_param = '{:16.6f}'
 value_param = '{:10.4f}'
 
 
@@ -104,7 +106,7 @@ def on_unsubscribe(client, userdata, mid):
 def on_message(client, userdata, msg):
 	def topic(message):
 		global last_stamp, msg_type, msg_name, disp, value3_type
-		global drift, format_param, value_param, drift_flag
+		global drift, format_param, value_param, drift_flag, login_status
 		try:
 			length = len(message['SensorValue' + str(msg_type)])
 			msg = None
@@ -123,11 +125,15 @@ def on_message(client, userdata, msg):
 			return
 		# process timestamp
 		stamp = float(msg['timestamp'])
-		dt = stamp - last_stamp
 		if drift_flag:
-			jitter = dt - 0.1
+			dt = stamp - last_stamp
+			if login_status:
+				jitter = dt - constants.measurementPeriodLogin
+			else:
+				jitter = dt - constants.measurementPeriodLogout
 			drift += jitter
 		else:
+			dt = 0
 			jitter = 0
 			drift_flag = True
 		last_stamp = stamp
@@ -150,9 +156,10 @@ def on_message(client, userdata, msg):
 				value = "X: " + valueX + "   Y: " + valueY + "   Z: " + valueZ
 		# print data (/t not useful)
 		print(msg_name + ": " + str(value) + "  |  " \
-			  + "stamp: " + format_param.format(stamp) + "  |  " \
-			  + "jitter: " + format_param.format(jitter) + "  |  " \
-			  + "drift: " + format_param.format(drift))
+			+ "stamp: " + format_param.format(stamp) + "  |  " \
+			+ "dt: " + format_param.format(dt) + "  |  " \
+			+ "jitter: " + format_param.format(jitter) + "  |  " \
+			+ "drift: " + format_param.format(drift))
 
 	dict = json.loads(msg.payload.decode('utf-8'))
 	if disp == 1:

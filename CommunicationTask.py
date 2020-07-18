@@ -11,6 +11,7 @@ import abc
 
 
 class Communication(abc.ABC):
+	# abstract Class
 	_host = None
 	_port = None
 	_com2_car_topic = None
@@ -52,9 +53,9 @@ class Communication(abc.ABC):
 		# logg unexpected message
 		self._logger_function("unexpected message" + msg.payload.decode('utf-8'))
 
-	def _do_nothing(self, client, userdata, msg):
+	# ignore known topic
+	def _do_ignore(self, client, userdata, msg):
 		pass
-
 
 
 
@@ -68,18 +69,16 @@ class InternCom(Communication):
 		self._com2_car_topic = 'local/com2/car'
 		self._com2_web_topic = 'local/com2/web'
 		self._sensor_topic = 'local/sensor'
-		self._RFID_topic = 'local/RFID'
+		self.__RFID_topic = 'local/RFID'
 		
 		self.__overflow_file = open('LoggerData/overflow.log','a')
-
-
 
 	def init_mqtt_client(self):
 		self._client = paho.Client()
 		self._client.message_callback_add(self._sensor_topic, self._on_sensor_message)
 		self._client.message_callback_add(self._com2_web_topic, self._on_com2_web)
-		self._client.message_callback_add(self._com2_car_topic, self._do_nothing)
-		self._client.message_callback_add(self._RFID_topic, self._do_nothing)
+		self._client.message_callback_add(self._com2_car_topic, self._do_ignore)
+		self._client.message_callback_add(self.__RFID_topic, self._do_ignore)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
 		self._client.on_publish = self._on_publish
@@ -94,7 +93,6 @@ class InternCom(Communication):
 		self._client.loop_start()
 		# start loop function
 		self._on_loop()
-
 
 	def _on_sensor_message(self, client, userdata, msg):
 		global _sensor_buf
@@ -121,7 +119,7 @@ class InternCom(Communication):
 			if length >= constants.loginBufferSize:
 				# delete all elements in queue
 				_com2_web_buf.queue.clear()
-				self._logger_function("com2_web overflow... messages deleted: " + str(length))
+				self._logger_function("com2_web overflow... messages deleted: " + str(length))				
 
 	def _on_loop(self):
 		global _FINISH, _com2_car_buf
@@ -169,8 +167,8 @@ class ExternCom(Communication):
 		# username and password
 		self._client.username_pw_set(username=self.__user, password=self.__password)
 		self._client.message_callback_add(self._com2_car_topic, self._on_com2_car)
-		self._client.message_callback_add(self._com2_web_topic, self._do_nothing)
-		self._client.message_callback_add(self._sensor_topic, self._do_nothing)
+		self._client.message_callback_add(self._com2_web_topic, self._do_ignore)
+		self._client.message_callback_add(self._sensor_topic, self._do_ignore)
 		self._client.on_message = self._on_message
 		self._client.on_subscribe = self._on_subscribe
 		self._client.on_publish = self._on_publish
@@ -239,6 +237,7 @@ class ExternCom(Communication):
 			time.sleep(constants.measurementPeriodLogin / 10)
 
 
+
 #signal Handler (Ctrl+C)
 def signalHandler(sig,frame):
 	global com_intern, com_extern, t1, t2, _FINISH
@@ -251,6 +250,7 @@ def signalHandler(sig,frame):
 	print("exit t1")
 	t2.join()
 	print("exit t2")
+
 
 
 if __name__ == "__main__":
