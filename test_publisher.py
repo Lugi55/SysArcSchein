@@ -22,10 +22,10 @@ def main():
 		print("user stopped process")
 		sys.exit(0)
 
-	#host = 'localhost'
-	#port = 8884
-	host = '192.168.200.165'
-	port = 8883
+	host = 'localhost'
+	port = 1883
+	#host = '192.168.200.165'
+	#port = 8883
 	qos = 2
 	topic = '/SysArch/V3/sensor'
 
@@ -33,7 +33,9 @@ def main():
 	signal.signal(signal.SIGINT, signalHandler)
 	# cpu temperature
 	vcgm = Vcgencmd()
-
+	# test json
+	test_file = open("test_msg.json")
+	test_msg = json.load(test_file)
 	#init MQTT Client
 	client = paho.Client()
 	# username and password
@@ -52,12 +54,13 @@ def main():
 		temperature = vcgm.measure_temp()
 		temperature = str(temperature)
 		timestamp = str(time.time())
-		dict = {'timestamp':timestamp,'temperature':temperature}
+		#dict = {'timestamp':timestamp,'temperature':temperature}
+		dict = test_msg
 		# publish
-		rc = client.publish(topic, json.dumps(dict), qos = qos)
-		#client.publish("V3/con2/car", json.dumps(dict), qos = 2)
-		#client.publish("local/con2/web", json.dumps(dict), qos = 2)
-		#client.publish("local/sensor",  json.dumps(dict), qos = 0)
+		#rc = client.publish(topic, json.dumps(dict), qos = qos)
+		#client.publish("V3/com2/car", json.dumps(dict), qos = 2)
+		#client.publish("local/com2/web", json.dumps(dict), qos = 2)
+		client.publish("local/sensor",  json.dumps(dict), qos = 0)
 		#print(rc)
 		time.sleep(0.5)
 
