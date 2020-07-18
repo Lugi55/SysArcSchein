@@ -156,6 +156,11 @@
 					"command": "local/sensor"
 				},
 				{
+					"title": "Topic: local/com2/#",
+					"type": "command",
+					"command": "local/com2/#"
+				},
+				{
 					"title": "Topic: local/com2/car",
 					"type": "command",
 					"command": "local/com2/car"

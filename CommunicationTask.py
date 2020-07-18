@@ -60,14 +60,17 @@ class Communication(abc.ABC):
 
 # class for internal communication
 class InternCom(Communication):
-	_host = 'localhost'
-	_port = 1883
-	_com2_car_topic = 'local/com2/car'
-	_com2_web_topic = 'local/com2/web'
-	_sensor_topic = 'local/sensor'
 
 	def __init__(self):
+		super().__init__(self)
+		self._host = 'localhost'
+		self._port = 1883
+		self._com2_car_topic = 'local/com2/car'
+		self._com2_web_topic = 'local/com2/web'
+		self._sensor_topic = 'local/sensor'
+		
 		self.__overflow_file = open('LoggerData/overflow.log','a')
+
 
 
 	def init_mqtt_client(self):
@@ -145,23 +148,20 @@ class InternCom(Communication):
 
 
 # class for external communication
-class ExternCom:
-#	_host = 'localhost'
-#	_port = 1883
-	_host = '192.168.200.165'
-	_port = 8883
-	_com2_car_topic = '/SysArch/V3/com2/car'
-	_com2_web_topic = '/SysArch/V3/com2/web'
-	_sensor_topic = '/SysArch/V3/sensor'
-	__user = 'V3'
-	__password = 'DE5'
+class ExternCom(Communication):
 
 	def __init__(self):
+		super().__init__(self)
 		self._logger_function("object created")
-	
-	def end_client(self):
-		self._client.loop_stop()
-		self._logger_function("program stopped")
+		#self._host = 'localhost'
+		#self._port = 1883
+		self._host = '192.168.200.165'
+		self._port = 8883
+		self._com2_car_topic = '/SysArch/V3/com2/car'
+		self._com2_web_topic = '/SysArch/V3/com2/web'
+		self._sensor_topic = '/SysArch/V3/sensor'
+		self.__user = 'V3'
+		self.__password = 'DE5'
 
 	def init_mqtt_client(self):
 		self._client = paho.Client()
@@ -184,22 +184,6 @@ class ExternCom:
 		self._client.loop_start()
 		# start loop function
 		self._on_loop()
-
-	#callback funktions
-	def _on_subscribe(self, client, userdata, mid, granted_qos):
-		self._logger_function("subscribed")
-		print(dict)
-
-	def _on_publish(self, client, userdata, result):
-		#print("data published")
-		pass
-
-	def _on_message(self, client, userdata, msg):
-		# logg unexpected message
-		self._logger_function("unexpected message" + msg.payload.decode('utf-8'))
-
-	def _do_nothing(self, client, userdata, msg):
-		pass
 
 	def _on_com2_car(self, client, userdata, msg):
 		global _com2_car_buf
@@ -252,11 +236,6 @@ class ExternCom:
 				_com2_web_buf.task_done()
 			# sleep
 			time.sleep(constants.measurementPeriodLogin / 10)
-
-	#logger prints
-	def _logger_function(self, text):
-		logging.info('CommunicationTask\tExternCom: '+text)
-		print(text)
 
 
 #signal Handler (Ctrl+C)
