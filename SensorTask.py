@@ -59,7 +59,6 @@ class Sensor():
 		self.speed = 0
 		self.steeringAngle = 0
 		self.LIDAR = 10
-		
 		self.userLoginLogout()
 
 	def on_subscribe(self,client,userdata,mid,graned_qos):
@@ -78,15 +77,15 @@ class Sensor():
 		logging.info('SenosrTask\t\tRFID message incoming')
 		dict = json.loads(msg.payload.decode('utf-8'))
 		self.on_com2web(dict['tokenID'])
-		
-	def userLoginLogout(self,dict)
+
+	def userLoginLogout(self,dict=None):
 		with FileLock("user.txt.lock"):
 			logging.info('SensorTask\t\tuser.txt modified')
-    			with open("myfile.txt",'w') as file:
+			with open("myfile.txt",'w') as file:
 				if self.login:
 					file.write(json.dumps(dict))
 				else:
-					file.wirte('')
+					file.write('')
 				
 	
 
