@@ -59,6 +59,8 @@ class Sensor():
 		self.speed = 0
 		self.steeringAngle = 0
 		self.LIDAR = 10
+		
+		self.userLoginLogout()
 
 	def on_subscribe(self,client,userdata,mid,graned_qos):
 		logging.info('SensorTask\t\tsubscribe to local/com2/car')
