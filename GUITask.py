@@ -17,8 +17,8 @@ value3_type = None
 last_stamp = 0
 drift = 0
 drift_flag = False
-format_param = '{:16.6f}'
-value_param = '{:7.2f}'
+format_param = '{:016.6f}'
+value_param = '{:10.4f}'
 
 
 def GUI(stdscr):
@@ -114,15 +114,13 @@ def on_message(client, userdata, msg):
 			length = len(message['SensorValue' + str(msg_type)])
 			msg = None
 			for i in range(length):
-				# debug start
-				print(message['SensorValue' + str(msg_type)][i]['name'])
-				print(msg_name)
-				# debug end
-				# somehow a bug with this if statement 
-				if message['SensorValue' + str(msg_type)][i]['name'] is msg_name:
+				# somehow a bug with "if is" statement 
+				if message['SensorValue' + str(msg_type)][i]['name'] == msg_name:
 					msg = message['SensorValue' + str(msg_type)][i]
 					break
 			if not msg:
+				print("Requested data not in message!\nPlease press ENTER.")
+				disp = 0
 				return	
 		except:
 			print("Requested data not in message!\nPlease press ENTER.")
@@ -131,10 +129,11 @@ def on_message(client, userdata, msg):
 		# process timestamp
 		stamp = float(msg['timestamp'])
 		dt = stamp - last_stamp
-		jitter = dt - 0.1
 		if drift_flag:
+			jitter = dt - 0.1
 			drift += jitter
 		else:
+			jitter = 0
 			drift_flag = True
 		last_stamp = stamp
 		# process value
@@ -144,31 +143,33 @@ def on_message(client, userdata, msg):
 		elif msg_type is 3:
 			valueX = value_param.format(float(msg['valueX']))
 			valueY = value_param.format(float(msg['valueY']))
-			valueZ = value_param.format(float(msg['valueX']))
+			valueZ = value_param.format(float(msg['valueZ']))
 
 			if value3_type is "x":
 				value = valueX
 			elif value3_type is "y":
 				value = valueY
 			elif value3_type is "z":
-				value = valueX
+				value = valueZ
 			else:
-				value = "ValueX: " + valueX + " ValueY: " + valueY + " ValueZ: " + valueZ
-		# print data
-		print(msg_name + ": " + str(value) \
-			  + "\tstamp: " + format_param.format(stamp) \
-			  + "\tjitter: " + format_param.format(jitter) \
-			  + "\tdrift: " + format_param.format(drift))
+				value = "X: " + valueX + "   Y: " + valueY + "   Z: " + valueZ
+		# print data (/t not useful)
+		print(msg_name + ": " + str(value) + "  |  " \
+			  + "stamp: " + format_param.format(stamp) + "  |  " \
+			  + "jitter: " + format_param.format(jitter) + "  |  " \
+			  + "drift: " + format_param.format(drift))
 
 	dict = json.loads(msg.payload.decode('utf-8'))
 	if disp == 1:
-		print(dict)
+		print(str(dict) + "\n")
 	if disp == 2:
 		topic(dict)
 
 
 def display_topic(topic):
 	global client, disp, drift_flag
+	# clear terminal
+	os.system('clear')
 	client.subscribe(topic, qos=0)
 	client.loop_start()
 	disp = 1
@@ -179,7 +180,9 @@ def display_topic(topic):
 
 
 def display_data():
-	global client, disp, drift_flag
+	global client, disp, drift_flag, drift
+	# clear terminal
+	os.system('clear')
 	client.subscribe('local/sensor', qos=0)
 	client.loop_start()
 	disp = 2
@@ -188,6 +191,7 @@ def display_data():
 	client.loop_stop()
 	client.unsubscribe('local/sensor')
 	drift_flag = False
+	drift = 0
 
 
 if __name__ == '__main__':
