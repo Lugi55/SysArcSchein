@@ -94,20 +94,14 @@ class Sensor():
 		dict = json.loads(msg.payload.decode('utf-8'))
 		if self.login == False and dict["login"]==True and dict["certified"]==True:
 			logging.info('SensorTask\t\tuser login succesfull')
-			self.userName = dict["user"]["userName"]
 			self.login = True
 			self.userLoginLogout(dict)
-		if self.login == False and dict["login"]==False:
-			logging.info('SensorTask\t\tno user to unlog')
-		if self.login == False and dict["login"]==True and dict["certified"]==False:
-			logging.info('SensorTask\t\tuser not certified')
-		if self.login == True and dict["login"]==True:
-			logging.info('SensorTask\t\ta user is already logined in')
-		if self.login == True and dict["login"]==False and dict["user"]["userName"]==self.userName:
+		elif self.login == True and dict["login"]==False and dict["certified"]==True:
 			logging.info('SensorTask\t\tuser logout succesfull')
-			self.userName = None
 			self.login = False
 			self.userLoginLogout(dict)
+		else:
+			logging.info('SensorTask\t\someting went wrong with login or logout')
 			
 
 
