@@ -81,13 +81,13 @@ class Sensor():
 	def userLoginLogout(self,dict=None):
 		with FileLock("user.txt.lock"):
 			logging.info('SensorTask\t\tuser.txt modified')
-			with open("myfile.txt",'w') as file:
+			with open("user.txt",'w') as file:
 				if self.login:
 					file.write(json.dumps(dict))
 				else:
 					file.write('')
-				
-	
+
+
 
 	def on_com2car(self,client,userdata,msg):
 		logging.info('SensorTask\t\ttry user login or logout')
@@ -108,7 +108,7 @@ class Sensor():
 			self.userName = None
 			self.login = False
 			self.userLoginLogout(dict)
-			
+
 
 
 	def randomWalk(self,start,stop,dx,x):
