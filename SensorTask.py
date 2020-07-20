@@ -79,13 +79,12 @@ class Sensor():
 		self.on_com2web(dict['tokenID'])
 
 	def userLoginLogout(self,dict=None):
-		with FileLock("user.txt.lock"):
-			logging.info('SensorTask\t\tuser.txt modified')
-			with open("user.txt",'w') as file:
-				if self.login:
-					file.write(json.dumps(dict))
-				else:
-					file.write('')
+		logging.info('SensorTask\t\tuser.txt modified')
+		with open("user.txt",'w') as file:
+			if self.login:
+				file.write(json.dumps(dict))
+			else:
+				file.write('')
 
 
 
