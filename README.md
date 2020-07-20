@@ -77,3 +77,9 @@ status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Mag
 ## IMU requrements
 
 ## Installation
+
+## division of labor
+||SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|TestTask|ReadTask|start.bat|sum
+|:---------:|:-----:|:--------:|:---------------:|:------:|:------:|:------:|:-------:|:---:|:---:|
+|Luginsland|10h||5h||2h||2h|1h|40h
+|Casagranda||5h||10h||2h|3h|1h|40h
