@@ -68,6 +68,7 @@ status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Mag
 ## LoggerTask
 ## CommunicationTask
 ## RFIDTask
+## RFIDTest
 ## TestTask
 ## constants 
 ## start.bat
@@ -79,7 +80,7 @@ status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Mag
 ## Installation
 
 ## division of labor
-||SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|TestTask|ReadTask|start.bat|sum
+||SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|TestTask|RFIDTest|start.bat|sum
 |:---------:|:-----:|:--------:|:---------------:|:------:|:------:|:------:|:-------:|:---:|:---:|
-|Luginsland|10h||5h||2h||2h|1h|40h
-|Casagranda||5h||10h||2h|3h|1h|40h
+|Luginsland|10h||5h||2h||2h|1h|35h
+|Casagranda||5h||10h||2h|3h|1h|35h
