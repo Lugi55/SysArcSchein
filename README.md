@@ -62,3 +62,18 @@ status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Mag
 ![GitHub Logo](/images/loginlogout.png)
 ## Sensor publish sequence diagram
 ![GitHub Logo](/images/SensorLoop.png)
+
+## SensorTask
+## GUITask
+## LoggerTask
+## CommunicationTask
+## RFIDTask
+## TestTask
+## constants 
+## start.bat
+
+## Python requirements
+## Mqtt requrements
+## IMU requrements
+
+## Installation
