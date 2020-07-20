@@ -21,12 +21,21 @@
 #    along with MFRC522-Python.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+import paho.mqtt.client as paho
+import json
 import RPi.GPIO as GPIO
 import MFRC522
 import signal
+import constants
 import sys
+import time
 
 continue_reading = True
+
+client = paho.Client()
+client.connect(host='localhost',port= 1883)
+client.loop_start()
+
 
 # Capture SIGINT for cleanup when the script is aborted
 def end_read(signal,frame):
@@ -35,7 +44,6 @@ def end_read(signal,frame):
     continue_reading = False
     GPIO.cleanup()
     sys.exit()
-
 
 # Hook the SIGINT
 signal.signal(signal.SIGINT, end_read)
@@ -47,34 +55,21 @@ MIFAREReader = MFRC522.MFRC522()
 print "Welcome to the MFRC522 data read example"
 print "Press Ctrl-C to stop."
 
-new = False
-old = False
-
 # This loop keeps checking for chips. If one is near it will get the UID and authenticate
 while continue_reading:
-    
-    while new == old:
-        # Scan for cards    
-        (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
-	if status == MIFAREReader.MI_OK:
-            new = True
-        else:
-            new = False
-
-    print new
-    print old
-    old = new
+    # Scan for cards
+    (status,TagType) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
     # If a card is found
     if status == MIFAREReader.MI_OK:
         print "Card detected"
-
     # Get the UID of the card
     (status,uid) = MIFAREReader.MFRC522_Anticoll()
 
     # If we have the UID, continue
     if status == MIFAREReader.MI_OK:
-
-        # Print UID
         ID = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
+        # Print UID
+        dict = {"tokenID":ID}
+	client.publish('local/RFID',json.dumps(dict),qos=2)
         print "Card read UID: %s" % (ID)
-
+        time.sleep(constants.RFIDTimeout)
