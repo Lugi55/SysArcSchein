@@ -83,4 +83,4 @@ status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Mag
 ||SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|TestTask|RFIDTest|start.bat|sum
 |:---------:|:-----:|:--------:|:---------------:|:------:|:------:|:------:|:-------:|:---:|:---:|
 |Luginsland|10h||5h||2h||2h|1h|35h
-|Casagranda||5h||10h||2h|3h|1h|35h
+|Casagranda||15h||20h||6h|1h|1h|35h
