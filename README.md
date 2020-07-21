@@ -11,7 +11,7 @@
 |crucial   |x         |       |          |x                |        |
 
 ### SensorTask
-<img src="/images/SensorTask_1.png" alt="drawing" width="200"/>
+<img src="/images/SensorTask_1.png" alt="drawing" width="300"/>
 <img src="/images/SensorTask_2.png" alt="drawing" width="200"/>
 <img src="/images/SensorTask_3.png" alt="drawing" width="200"/>
 
@@ -23,12 +23,12 @@ status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Mag
 ### GUITask
 
 ### LoggerTask
-<img src="/images/LoggerTask.png" alt="drawing" width="200"/>
+<img src="/images/LoggerTask.png" alt="drawing" width="300"/>
 
 ### CommunicationTask
 
 ### RFIDTask
-<img src="/images/RFIDTask.png" alt="drawing" width="200"/>
+<img src="/images/RFIDTask.png" alt="drawing" width="300"/>
 
 ### constants 
 
@@ -86,11 +86,12 @@ status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Mag
 ```
 
 ## Car Web Interface sequence diagram
-![GitHub Logo](/images/WebCarInterface.png)
+
+<img src="/images/WebCarInterface.png" alt="drawing" width="500"/>
 ## Login Logout sequence diagram
-![GitHub Logo](/images/loginlogout.png)
+<img src="/images/loginlogout.png" alt="drawing" width="500"/>
 ## Sensor publish sequence diagram
-![GitHub Logo](/images/SensorLoop.png)
+<img src="/images/SensorLoop.png" alt="drawing" width="500"/>
 
 
 
