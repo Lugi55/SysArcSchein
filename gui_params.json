@@ -161,6 +161,11 @@
 					"command": "local/sensor"
 				},
 				{
+					"title": "Topic: local/RFID",
+					"type": "command",
+					"command": "local/RFID"
+				},
+				{
 					"title": "Topic: local/com2/#",
 					"type": "command",
 					"command": "local/com2/#"

@@ -8,7 +8,46 @@ import sys
 # This script publishes and listen at the same time 
 # for testing
 
+send_static_test_msg = True
+test_gui_and_comm_task = True
+
+test_msg = {   "SensorValue1":[      {
+	   "name":"Humidity",
+	   "timestamp":1595018177.2537384,
+	   "value":62.3947692431115
+
+},
+	{
+	   "name":"Temperature",
+	   "timestamp":1595018177.253633,
+	   "value":53.7
+
+}
+
+],
+   "SensorValue3":[      {
+	   "name":"Acceleration",
+	   "timestamp":1595018177.258011,
+	   "valueX":-0.13847,
+	   "valueY":0.993202,
+	   "valueZ":-0.082228
+
+},
+	{
+	   "name":"Gyro",
+	   "timestamp":1595018177.2622058,
+	   "valueX":2.205,
+	   "valueY":-5.845,
+	   "valueZ":-3.115
+
+}
+
+]
+}
+
+
 def main():
+	global test_msg, send_static_test_msg, test_gui_and_comm_task
 
 	def on_publish(client, userdata, result):
 		print("data published")
@@ -21,11 +60,14 @@ def main():
 		client.loop_stop()
 		print("user stopped process")
 		sys.exit(0)
-
-	host = 'localhost'
-	port = 1883
-	#host = '192.168.200.165'
-	#port = 8883
+	
+	if test_gui_and_comm_task:
+		host = 'localhost'
+		port = 1883
+	else:
+		host = '192.168.200.165'
+		port = 8883
+	
 	qos = 2
 	topic = '/SysArch/V3/sensor'
 
@@ -33,9 +75,6 @@ def main():
 	signal.signal(signal.SIGINT, signalHandler)
 	# cpu temperature
 	vcgm = Vcgencmd()
-	# test json
-	test_file = open("test_msg.json")
-	test_msg = json.load(test_file)
 	#init MQTT Client
 	client = paho.Client()
 	# username and password
@@ -51,17 +90,19 @@ def main():
 
 	#measurement Loop
 	while True:
-		temperature = vcgm.measure_temp()
-		temperature = str(temperature)
+		temperature = str(vcgm.measure_temp())
 		timestamp = str(time.time())
-		#dict = {'timestamp':timestamp,'temperature':temperature}
-		dict = test_msg
+		if send_static_test_msg:
+			dict = test_msg
+		else:
+			dict = {'timestamp':timestamp,'temperature':temperature}
 		# publish
-		#rc = client.publish(topic, json.dumps(dict), qos = qos)
-		#client.publish("V3/com2/car", json.dumps(dict), qos = 2)
-		#client.publish("local/com2/web", json.dumps(dict), qos = 2)
-		client.publish("local/sensor",  json.dumps(dict), qos = 0)
-		#print(rc)
+		if test_gui_and_comm_task:
+			client.publish("/SysArch/V3/com2/car", json.dumps(dict), qos = 2)
+			client.publish("local/com2/web", json.dumps(dict), qos = 2)
+			client.publish("local/sensor",  json.dumps(dict), qos = 0)
+		else:
+			client.publish(topic, json.dumps(dict), qos = qos)
 		time.sleep(0.5)
 
 

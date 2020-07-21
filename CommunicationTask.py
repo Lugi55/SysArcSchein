@@ -111,7 +111,7 @@ class InternCom(Communication):
 		# avoid race condition with threadlock
 		with lock:
 			length = self._sensor_buf.qsize()
-			print(length)
+			print("sensor_buf: " +str(length))
 			if length >= constants.sensorBufferSize:
 				# delete all elements in queue
 				self._sensor_buf.queue.clear()
@@ -124,7 +124,7 @@ class InternCom(Communication):
 		# debug
 		with lock:
 			length = self._com2_web_buf.qsize()
-			print("com2_web " +str(length))
+			print("com2_web_buf: " +str(length))
 			if length >= constants.loginBufferSize:
 				# delete all elements in queue
 				self._com2_web_buf.queue.clear()
@@ -198,7 +198,7 @@ class ExternCom(Communication):
 		# debug
 		with lock:
 			length = self._com2_car_buf.qsize()
-			print("com2_car " +str(length))
+			print("com2_car_buf: " +str(length))
 			if length >= constants.loginBufferSize:
 				# delete all elements in queue
 				self._com2_car_buf.queue.clear()

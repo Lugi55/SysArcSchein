@@ -1,0 +1,8 @@
+{
+	"login": "True",
+	"user": {
+		"userName": "V_Max",
+		"fullName": "Max Mustermann",
+		"email": "lol"
+	}
+}
