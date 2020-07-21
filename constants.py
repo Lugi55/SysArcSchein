@@ -6,6 +6,9 @@ measurementPeriodLogout = 5
 sensorBufferSize = 100
 loginBufferSize = 10
 
+# LoggerTask
+maxFileNumber = 48
+
 # rfid parameter
 RFIDTimeout = 2
 
