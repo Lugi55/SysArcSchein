@@ -38,29 +38,34 @@ class Logger():
 		self.client.on_subscribe = self.on_subscribe
 		self.client.connect(host='localhost',port= 1883)
 		self.client.subscribe(constants.local_sensor_topic, qos=0)
-		#create first fileTime
-		self.currentFileTime = datetime.datetime.now().replace(microsecond=0,second=0,minute=0)
 
+		#create first fileTime
 
 	def removeOldFiles(self):
-		file = []
+		files = []
 		for file in os.listdir('./LoggerData'):
 			if file.endswith('.log'):
-				file.append(file) # Chris: before 'files.append(file)'
-		while len(file) > constants.maxFileNumber:
-			os.remove('LoggerData/'+file[0])
+				files.append(file)
+		while len(files) > constants.maxFileNumber:
+			os.remove('LoggerData/'+files[0])
 			logging.info('LoggerTask\t\tremove Logger File')
+
 	#new Logger File
 	def createNewLoggerFile(self):
+		self.currentFileTime = datetime.datetime.now().replace(microsecond=0,second=0,minute=0)
 		self.fileName = datetime.datetime.now().replace(microsecond=0, second=0, minute=0).strftime("%Y-%m-%d_%H.log")
 		self.fileName = 'LoggerData/'+self.fileName
 		self.file = open(self.fileName,'a')
+		self.file.write('test')
+		print(self.fileName)
+		self.removeOldFiles()
 
 	#callback funktions
 	def on_subscribe(self, client, userdata, mid, granted_qos):
 		logging.info('LoggerTask\t\tSubscribed to SensorTask')
 
 	def on_message(self, client, userdata, msg):
+
 		if not( self.currentFileTime == datetime.datetime.now().replace(microsecond=0,second=0,minute=0)):
 			self.currentFileTime = datetime.datetime.now()
 			self.createNewLoggerFile()
