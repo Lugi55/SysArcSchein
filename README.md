@@ -11,9 +11,9 @@
 |crucial   |x         |       |          |x                |        |
 
 ### SensorTask
+<img src="/images/SensorTask_1.png" alt="drawing" width="200"/>
 <img src="/images/SensorTask_2.png" alt="drawing" width="200"/>
-![GitHub Logo](/images/SensorTask_2.png)
-![GitHub Logo](/images/SensorTask_3.png)
+<img src="/images/SensorTask_3.png" alt="drawing" width="200"/>
 
 status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Magnetometer|Gyro|Measurement Period|
 |:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|----:|
@@ -21,11 +21,15 @@ status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Mag
 |logout||||x|||x||x|1s|
 
 ### GUITask
+
 ### LoggerTask
-![GitHub Logo](/images/LoggerTask.png)
+<img src="/images/LoggerTask.png" alt="drawing" width="200"/>
+
 ### CommunicationTask
+
 ### RFIDTask
-![GitHub Logo](/images/RFIDTask.png)
+<img src="/images/RFIDTask.png" alt="drawing" width="200"/>
+
 ### constants 
 
 ## Communication
