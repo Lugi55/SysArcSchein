@@ -3,8 +3,7 @@
 ## Overview
 ![GitHub Logo](/images/UML.png)
 
-## Tasks
-
+## <a name="Tasks"></a> Tasks
 |          |SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|
 |:--------:|:--------:|:-----:|:--------:|:---------------:|:------:|
 |language  |Python3   |Python3|Python3   |Python3          |Python2 |
@@ -87,10 +86,15 @@ For example the updaterates of the **SensorTask** can be altered by changing var
 
 ## IPC
 For the local IPC mqtt is used.
-The communication to the web also usees mqtt.
+#### local topics
+``<local>/sensor``
+``<local>/com2/car``
+``<local>/com2/web``
+``<local>/RFID``
+The communication to the web also uses mqtt.
 The global topics and local topics are almost the same.
 Also messages trasmited over these topics are equal.
-For infos about message types and payload refer to **Communication with web**
+For infos about message types and payload refer to [Communication with web](#Communication with web)
 The following sequence diagrams show the lokal IPC.
 The first diagramm shows the sensorpublish procedure.
 <br /><br />
@@ -103,7 +107,7 @@ This diagramm shows the login logout procedure within the lokal domain.
 
 
 
-## Communication with web
+## <a name="Communication with web"></a> Communication with web
 For Communication between web and car mqqt is used.
 All messages that are transmitted to the must be bufferd. 
 There fore an own Task is used. 
@@ -115,11 +119,7 @@ Over the global topics standardized json frames are transmited.
 ``<V3>/sensor``
 ``<V3>/com2/web``
 ``<V3>/com2/car``
-#### local topics
-``<local>/sensor``
-``<local>/com2/car``
-``<local>/com2/web``
-``<local>/RFID``
+
 
 
 ### Json Sensor Frame
@@ -195,12 +195,12 @@ link to guide
 
 ## Guide
 To execude a task use ``python3 <TaskName>`` or ``python2 <TaskName>``.
-<br />
+<br /><br />
 For task with a negative niceness value ``sudo`` is needed.
-<br />
+<br /><br />
 All critcal Task have to run to ensure functionality.
 All non critical Task can be started and determied at any time.
-For infos to Task go ot Task
+For infos go to [Tasks](#Tasks)
 
 ## division of labor
 |           |SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|TestTask|TestRFID|Doku |Präsentation|WebCar Interface|sum|
