@@ -1,7 +1,7 @@
 # SysArc
 
 ## Overview
-![GitHub Logo](/images/UML.PNG)
+![GitHub Logo](/images/UML.png)
 
 ## Tasks
 |          |SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|
