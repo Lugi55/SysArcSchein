@@ -11,9 +11,9 @@
 |crucial   |x         |       |          |x                |        |
 
 ### SensorTask
-![GitHub Logo](/images/SensorTask_1.png =250x)
-![GitHub Logo](/images/SensorTask_2.png =250x)
-![GitHub Logo](/images/SensorTask_3.png =250x)
+<img src="/images/SensorTask_2.png" alt="drawing" width="200"/>
+![GitHub Logo](/images/SensorTask_2.png)
+![GitHub Logo](/images/SensorTask_3.png)
 
 status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Magnetometer|Gyro|Measurement Period|
 |:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|----:|
