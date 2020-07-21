@@ -6,6 +6,7 @@ import os
 import logging
 import signal
 import sys
+import constants
 
 def main():
 	#init logging module
