@@ -49,9 +49,9 @@ class Sensor():
 		self.client = paho.Client()
 		self.client.connect(host='localhost',port=1883)
 		self.client.on_subscribe = self.on_subscribe
-		self.client.message_callback_add('local/com2/car',self.on_com2car)
-		self.client.message_callback_add('local/RFID',self.on_RFID)
-		self.client.subscribe('local/#')
+		self.client.message_callback_add(constants.local_com2_car_topic,self.on_com2car)
+		self.client.message_callback_add(constants.local_RFID_topic ,self.on_RFID)
+		self.client.subscribe(constants.local_subscription)
 		self.client.loop_start()
 
 		#init some sensor values
