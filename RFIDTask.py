@@ -70,6 +70,6 @@ while continue_reading:
 		ID = str(uid[0])+str(uid[1])+str(uid[2])+str(uid[3])
 		# Print UID
 		dict = {"tokenID":ID}
-	client.publish('local/RFID',json.dumps(dict),qos=2)
+		client.publish(constants.local_RFID_topic,json.dumps(dict),qos=2)
 		print "Card read UID: %s" % (ID)
 		time.sleep(constants.RFIDTimeout)
