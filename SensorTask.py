@@ -153,7 +153,7 @@ class Sensor():
 		self.dict["SensorValue3"].append(self.gyroDict)
 		self.dict["SensorValue3"].append(self.magDict)
 		#publish to local Brocker
-		self.client.publish("local/sensor", json.dumps(self.dict), qos = 0)
+		self.client.publish(constants.local_sensor_topic, json.dumps(self.dict), qos = 0)
 		#when not login 1s measurement frequency
 		self.next_call = self.next_call+constants.measurementPeriodLogin
 		time.sleep(self.next_call - time.time())
@@ -179,7 +179,7 @@ class Sensor():
 		self.dict["SensorValue3"].append(self.accelDict)
 		self.dict["SensorValue3"].append(self.gyroDict)
 		#publish to local Brocker
-		self.client.publish("local/sensor", json.dumps(self.dict), qos = 0)
+		self.client.publish(constants.local_sensor_topic, json.dumps(self.dict), qos = 0)
 		#when not login 1s measurement frequency
 		self.next_call = self.next_call+constants.measurementPeriodLogout
 		time.sleep(self.next_call - time.time())
