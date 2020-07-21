@@ -40,9 +40,9 @@ The **SensorTask** subscribe to the topic ``<local>com2/car`` with is used to ge
 The message can be triggerd by a request from the RFID UserID or a login via web.
 The incoming Message contains information about the user, validation and if its an login or logout message.
 The following diagramm shows the callback function triggerd by the topic ``<local>com2/car``
-<br />
+<br /><br />
 <img src="/images/SensorTask_3.png" alt="drawing" width="200"/>
-<br />
+<br /><br />
 The folloing table shows witch sensor value is puplished and the update rate when a user is logged in or not.
 status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Magnetometer|Gyro|Measurement Period|
 |:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|----:|
