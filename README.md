@@ -1,7 +1,7 @@
 # SysArc
 
 ## Overview
-![GitHub Logo](/images/UML.png)
+![GitHub Logo](/images/UML.PNG)
 
 ## Tasks
 |          |SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|
@@ -11,9 +11,9 @@
 |crucial   |x         |       |          |x                |        |
 
 ### SensorTask
-![GitHub Logo](/images/SensorTask_1.png)
-![GitHub Logo](/images/SensorTask_2.png)
-![GitHub Logo](/images/SensorTask_3.png)
+![GitHub Logo](/images/SensorTask_1.png =250x)
+![GitHub Logo](/images/SensorTask_2.png =250x)
+![GitHub Logo](/images/SensorTask_3.png =250x)
 
 status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Magnetometer|Gyro|Measurement Period|
 |:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|----:|
