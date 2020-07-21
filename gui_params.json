@@ -6,6 +6,7 @@
 			"title": "View Sensor Data",
 			"type": "menu",
 			"subtitle": "Please select an option... all Values in SI units",
+			"cmd_type": "SensorValue1",
 			"options": [{
 					"title": "Back",
 					"type": "command",
@@ -15,6 +16,7 @@
 					"title": "SensorValue3 Acceleration",
 					"type": "menu",
 					"subtitle": "Please select an option... all Values in SI units",
+					"cmd_type": "SensorValue3",
 					"options": [{
 							"title": "Back",
 							"type": "command",
@@ -46,6 +48,7 @@
 					"title": "SensorValue3 Magnetometer",
 					"type": "menu",
 					"subtitle": "Please select an option... all Values in SI units",
+					"cmd_type": "SensorValue3",
 					"options": [{
 							"title": "Back",
 							"type": "command",
@@ -77,6 +80,7 @@
 					"title": "SensorValue3 Gyro",
 					"type": "menu",
 					"subtitle": "Please select an option... all Values in SI units",
+					"cmd_type": "SensorValue3",
 					"options": [{
 							"title": "Back",
 							"type": "command",
@@ -140,6 +144,7 @@
 			"title": "View Topics",
 			"type": "menu",
 			"subtitle": "Please select an option... press ENTER to return to GUI",
+			"cmd_type": "Topics",
 			"options": [{
 					"title": "Back",
 					"type": "command",

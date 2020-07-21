@@ -17,10 +17,19 @@ class Communication(abc.ABC):
 	_com2_car_topic = None
 	_com2_web_topic = None
 	_sensor_topic = None
+	_sensor_buf = None
+	_com2_car_buf = None
+	_com2_web_buf = None
 	_client = None
 
-	def __init__(self):
+	_FINISH = False
+
+	def __init__(self, sensor, com2_car, com2_web):
 		self._logger_function("object created")
+		# set buffer
+		self._sensor_buf = sensor
+		self._com2_car_buf = com2_car
+		self._com2_web_buf = com2_web
 
 	# abstract methods	
 	@abc.abstractmethod
@@ -35,6 +44,8 @@ class Communication(abc.ABC):
 	def end_client(self):
 		self._client.loop_stop()
 		self._logger_function("program stopped")
+		with lock:
+			self._FINISH = True
 
 	#logger prints
 	def _logger_function(self, text):
@@ -62,14 +73,14 @@ class Communication(abc.ABC):
 # class for internal communication
 class InternCom(Communication):
 
-	def __init__(self):
-		super().__init__()
+	def __init__(self, sensor, com2_car, com2_web):
+		super().__init__(sensor, com2_car, com2_web)
 		self._host = 'localhost'
 		self._port = 1883
-		self._com2_car_topic = 'local/com2/car'
-		self._com2_web_topic = 'local/com2/web'
-		self._sensor_topic = 'local/sensor'
-		self.__RFID_topic = 'local/RFID'
+		self._com2_car_topic = constants.local_com2_car_topic
+		self._com2_web_topic = constants.local_com2_web_topic
+		self._sensor_topic = constants.local_sensor_topic
+		self.__RFID_topic = constants.local_RFID_topic
 		
 		self.__overflow_file = open('LoggerData/overflow.log','a')
 
@@ -87,7 +98,7 @@ class InternCom(Communication):
 		except:
 			self._logger_function("connection failed - end thread")
 			return
-		self._client.subscribe(topic='local/#')
+		self._client.subscribe(topic=constants.local_subscription)
 		self._logger_function("start MQTT client")
 		# NON bloking start of MQTT Client
 		self._client.loop_start()
@@ -95,43 +106,40 @@ class InternCom(Communication):
 		self._on_loop()
 
 	def _on_sensor_message(self, client, userdata, msg):
-		global _sensor_buf
 		# blocking queque access
-		_sensor_buf.put(msg)
+		self._sensor_buf.put(msg)
 		# avoid race condition with threadlock
 		with lock:
-			length = _sensor_buf.qsize()
+			length = self._sensor_buf.qsize()
 			print(length)
 			if length >= constants.sensorBufferSize:
 				# delete all elements in queue
-				_sensor_buf.queue.clear()
+				self._sensor_buf.queue.clear()
 				self.__overflow_file.write("deleted sensor messages = "+str(length)+"\n")
 				self._logger_function("buffer: deleted messages = "+str(length))
 
 	def _on_com2_web(self, client, userdata, msg):
-		global _com2_web_buf
 		# blocking queque access
-		_com2_web_buf.put(msg)
+		self._com2_web_buf.put(msg)
 		# debug
 		with lock:
-			length = _com2_web_buf.qsize()
+			length = self._com2_web_buf.qsize()
 			print("com2_web " +str(length))
 			if length >= constants.loginBufferSize:
 				# delete all elements in queue
-				_com2_web_buf.queue.clear()
+				self._com2_web_buf.queue.clear()
 				self._logger_function("com2_web overflow... messages deleted: " + str(length))				
 
 	def _on_loop(self):
-		global _FINISH, _com2_car_buf
 		while True:
-			if _FINISH:
+			if self._FINISH:
 				# exit if user ends skript
 				break
 			############
 			# com2/car #
 			############
 			try:
-				com_msg = _com2_car_buf.get(block=False)
+				com_msg = self._com2_car_buf.get(block=False)
 			except queue.Empty:
 				# pass expected empty queue exception
 				com_msg = None
@@ -141,7 +149,7 @@ class InternCom(Communication):
 				self._client.publish(self._com2_car_topic, com_msg.payload, qos = 2)
 				#print(rc)
 				# tell queue that task is done
-				_com2_car_buf.task_done()
+				self._com2_car_buf.task_done()
 			# sleep
 			time.sleep(constants.measurementPeriodLogin / 10)
 
@@ -150,17 +158,17 @@ class InternCom(Communication):
 # class for external communication
 class ExternCom(Communication):
 
-	def __init__(self):
-		super().__init__()
-		#self._host = 'localhost'
-		#self._port = 1883
-		self._host = '192.168.200.165'
-		self._port = 8883
-		self._com2_car_topic = '/SysArch/V3/com2/car'
-		self._com2_web_topic = '/SysArch/V3/com2/web'
-		self._sensor_topic = '/SysArch/V3/sensor'
-		self.__user = 'V3'
-		self.__password = 'DE5'
+	def __init__(self, sensor, com2_car, com2_web):
+		super().__init__(sensor, com2_car, com2_web)
+		#self._host = 'localhost' # test
+		#self._port = 1883 # test
+		self._host = constants.extern_host
+		self._port = constants.extern_port
+		self._com2_car_topic = constants.extern_com2_car_topic
+		self._com2_web_topic = constants.extern_com2_web_topic
+		self._sensor_topic = constants.extern_sensor_topic
+		self.__user = constants.extern_user
+		self.__password = constants.extern_password
 
 	def init_mqtt_client(self):
 		self._client = paho.Client()
@@ -177,7 +185,7 @@ class ExternCom(Communication):
 		except:
 			self._logger_function("connection failed - end thread")
 			return
-		self._client.subscribe('/SysArch/V3/#', qos=2)
+		self._client.subscribe(constants.extern_subscription, qos=2)
 		self._logger_function("start MQTT client_extern")
 		# NON bloking start of MQTT Client
 		self._client.loop_start()
@@ -185,22 +193,20 @@ class ExternCom(Communication):
 		self._on_loop()
 
 	def _on_com2_car(self, client, userdata, msg):
-		global _com2_car_buf
 		# blocking queque access
-		_com2_car_buf.put(msg)
+		self._com2_car_buf.put(msg)
 		# debug
 		with lock:
-			length = _com2_car_buf.qsize()
+			length = self._com2_car_buf.qsize()
 			print("com2_car " +str(length))
 			if length >= constants.loginBufferSize:
 				# delete all elements in queue
-				_com2_car_buf.queue.clear()
+				self._com2_car_buf.queue.clear()
 				self._logger_function("com2_car overflow... messages deleted: " + str(length))
 	
 	def _on_loop(self):
-		global _FINISH, _sensor_buf, _com2_web_buf
 		while True:
-			if _FINISH:
+			if self._FINISH:
 				# exit if user ends skript
 				break
 			##########
@@ -208,7 +214,7 @@ class ExternCom(Communication):
 			##########
 			# non-bocking get elemtent from queue with timeout 		
 			try:
-				sensor_msg = _sensor_buf.get(block=False)
+				sensor_msg = self._sensor_buf.get(block=False)
 			except queue.Empty:
 				# pass expected empty queue exception
 				sensor_msg = None
@@ -217,12 +223,12 @@ class ExternCom(Communication):
 				# send message from buffer
 				self._client.publish(self._sensor_topic, sensor_msg.payload, qos = 0)
 				# tell queue that task is done
-				_sensor_buf.task_done()
+				self._sensor_buf.task_done()
 			############
 			# com2/web #
 			############
 			try:
-				com_msg = _com2_web_buf.get(block=False)
+				com_msg = self._com2_web_buf.get(block=False)
 			except queue.Empty:
 				# pass expected empty queue exception
 				com_msg = None
@@ -232,7 +238,7 @@ class ExternCom(Communication):
 				self._client.publish(self._com2_web_topic, com_msg.payload, qos = 2)
 				#print(rc)
 				# tell queue that task is done
-				_com2_web_buf.task_done()
+				self._com2_web_buf.task_done()
 			# sleep
 			time.sleep(constants.measurementPeriodLogin / 10)
 
@@ -240,12 +246,10 @@ class ExternCom(Communication):
 
 #signal Handler (Ctrl+C)
 def signalHandler(sig,frame):
-	global com_intern, com_extern, t1, t2, _FINISH
+	global com_intern, com_extern, t1, t2
 	logging.info('CommunicationTask\tCtrl+C - killed by user')
 	com_intern.end_client()
 	com_extern.end_client()
-	print("this can take up to 60s ...")
-	_FINISH = True
 	t1.join()
 	print("exit t1")
 	t2.join()
@@ -266,10 +270,9 @@ if __name__ == "__main__":
 	_com2_web_buf = queue.Queue()
 	_com2_car_buf = queue.Queue() 
 	# create communication objects
-	com_intern = InternCom()
-	com_extern = ExternCom()
+	com_intern = InternCom(_sensor_buf, _com2_car_buf, _com2_web_buf)
+	com_extern = ExternCom(_sensor_buf, _com2_car_buf, _com2_web_buf)
 	# use threads
-	_FINISH = False
 	lock = threading.Lock()
 	t1 = threading.Thread(target=com_intern.init_mqtt_client)
 	t2 = threading.Thread(target=com_extern.init_mqtt_client)

@@ -9,7 +9,6 @@ import constants
 
 menu = None
 parent = []
-user_s = "-"
 login_status = False
 
 disp = 0
@@ -20,8 +19,8 @@ value3_type = None
 last_stamp = 0
 drift = 0
 drift_flag = False
-format_param = '{:16.6f}'
-value_param = '{:10.4f}'
+format_param = constants.timestamp_format
+value_param = constants.value_format
 
 
 def GUI(stdscr):
@@ -34,18 +33,23 @@ def GUI(stdscr):
 	def updateMenu(current_row, menu_var, parent_var=None):
 		global menu
 		if menu != menu_var:
+			# set cursor to 0 if new menu is opend
 			menu = menu_var
 			current_row = 0
 		if parent_var:
+			# append parent menu to list (fifo)
 			global parent
 			parent.append(parent_var)
-
+		# check user status
+		user_s = set_user()
+		# start gui printing
 		stdscr.clear()
 		try:
 			stdscr.addstr(1, 2, menu['title'], curses.A_UNDERLINE)  # Title for this menu
 			stdscr.addstr(2, 2,"user: " + user_s) # print user 
 			stdscr.addstr(4, 2, menu['subtitle'], curses.A_BOLD)  # Subtitle for this menu
 		except:
+			# pass known curses bug, resticts no functionality
 			pass
 		for idx in range(len(menu_var['options'])):
 			if idx == current_row:
@@ -54,6 +58,7 @@ def GUI(stdscr):
 				try:
 					stdscr.addstr(idx + 5, 4, '%s - %s' % ('{:3}'.format(idx + 1), menu_var['options'][idx]['title']))
 				except:
+					# pass known curses bug, resticts no functionality
 					pass
 				stdscr.attroff(curses.color_pair(1))
 			else:
@@ -61,9 +66,35 @@ def GUI(stdscr):
 				try:
 					stdscr.addstr(idx + 5, 4, '%s - %s' % ('{:3}'.format(idx + 1), menu_var['options'][idx]['title']))
 				except:
+					# pass known curses bug, resticts no functionality
 					pass
 
+	def set_user():
+		global login_status
+		# load user file
+		try:	
+			user_file = open("user.txt")
+		except:
+			logging.info('GUITask\t\tabort: no user.txt')
+			print("abort: no user.txt")
+			sys.exit(1)
+		user_s = user_file.read()
+		if user_s != '':
+			user_data = json.loads(user_s)
+			try:
+				if user_data["login"] == "True":
+					# set login_status and return user name
+					login_status = True
+					return user_data['user']['userName']
+			except:
+				pass
+		# set login_status and return user name
+		login_status = False
+		return "-"
+
+
 	stdscr.clear()
+	#stdscr.timeout(100)
 	curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
 	curses.curs_set(0)
 	current_row = 0
@@ -84,13 +115,16 @@ def GUI(stdscr):
 					# view parent menu
 					time_parent = int(round(time.time() * 1000))  # in ms
 					updateMenu(current_row, parent.pop(-1))
+				elif menu['options'][current_row]['command'] == 'Exit':
+					# end program
+					sys.exit(0)
 				else:
-					# return command value
-					return menu['options'][current_row]['command']  # return command
+					# return command value and command type
+					return (menu['options'][current_row]['command'], menu['cmd_type'])
 			# if type is 'menu'
 			if menu['options'][current_row]['type'] == 'menu':
 				# access submenu
-				if int(round(time.time() * 1000)) - time_parent > 10:
+				if int(round(time.time() * 1000)) - time_parent > 10: # bugfix
 					updateMenu(current_row, menu['options'][current_row], menu)  # display the submenu
 					current_row = 0
 
@@ -105,8 +139,8 @@ def on_unsubscribe(client, userdata, mid):
 
 def on_message(client, userdata, msg):
 	def topic(message):
-		global last_stamp, msg_type, msg_name, disp, value3_type
-		global drift, format_param, value_param, drift_flag, login_status
+		global  msg_type, msg_name, disp, value3_type, \
+			format_param, value_param, drift_flag
 		try:
 			length = len(message['SensorValue' + str(msg_type)])
 			msg = None
@@ -124,19 +158,8 @@ def on_message(client, userdata, msg):
 			disp = 0
 			return
 		# process timestamp
-		stamp = float(msg['timestamp'])
-		if drift_flag:
-			dt = stamp - last_stamp
-			if login_status:
-				jitter = dt - constants.measurementPeriodLogin
-			else:
-				jitter = dt - constants.measurementPeriodLogout
-			drift += jitter
-		else:
-			dt = 0
-			jitter = 0
-			drift_flag = True
-		last_stamp = stamp
+		(stamp, dt, jitter, drift) = processTimestamp(float(msg['timestamp']))
+		
 		# process value
 		if msg_type is 1:
 			value = value_param.format(float(msg['value']))
@@ -161,6 +184,25 @@ def on_message(client, userdata, msg):
 			+ "jitter: " + format_param.format(jitter) + "  |  " \
 			+ "drift: " + format_param.format(drift))
 
+	def processTimestamp(stamp):
+		global last_stamp, drift, drift_flag, login_status
+		# compute dt, jitter and drift
+		if drift_flag:
+			dt = stamp - last_stamp
+			if login_status:
+				jitter = dt - constants.measurementPeriodLogin
+			else:
+				jitter = dt - constants.measurementPeriodLogout
+			drift += jitter
+		else:
+			dt = 0
+			jitter = 0
+			drift_flag = True
+		last_stamp = stamp
+		return(stamp, dt, jitter, drift)
+
+
+	# load payload
 	dict = json.loads(msg.payload.decode('utf-8'))
 	if disp == 1:
 		print(str(dict) + "\n")
@@ -185,24 +227,29 @@ def display_data():
 	global client, disp, drift_flag, drift
 	# clear terminal
 	os.system('clear')
-	client.subscribe('local/sensor', qos=0)
+	client.subscribe(constants.local_sensor_topic, qos=0)
 	client.loop_start()
 	disp = 2
 	input()
 	disp = 0
 	client.loop_stop()
-	client.unsubscribe('local/sensor')
+	client.unsubscribe(constants.local_sensor_topic)
 	drift_flag = False
 	drift = 0
 
 
 if __name__ == '__main__':
-	# load menu params
-	param_file = open("gui_params.json")
-	menu_data = json.load(param_file)
 	# init logging module
 	logging.basicConfig(filename='logFile.log', format='%(asctime)s %(message)s', level=logging.DEBUG)
 	logging.info('GUITask\t\tstart')
+	# load menu params
+	try:
+		param_file = open("gui_params.json")
+	except:
+		logging.info('GUITask\t\tabort: no gui_params.json')
+		print("abort: no gui_params.json")
+		sys.exit(1)
+	menu_data = json.load(param_file)
 	# define os priority
 	niceValue = os.nice(10)
 	logging.info('GUITask\t\tniceValue:%s', niceValue)
@@ -215,61 +262,20 @@ if __name__ == '__main__':
 
 	while True:
 		# start GUI blocking
-		rc = curses.wrapper(GUI)
-		rc_list = rc.split()
-		# exit
-		if rc_list[0] == 'Exit':
-			sys.exit(0)
+		(cmd, cmd_type) = curses.wrapper(GUI)
+		cmd_tuple = cmd.split()
 		# topics
-		elif rc_list[0] == 'local/#':
-			display_topic(rc_list[0])
-		elif rc_list[0] == 'local/sensor':
-			display_topic(rc_list[0])
-		elif rc_list[0] == 'local/com2/#':
-			display_topic(rc_list[0])
-		elif rc_list[0] == 'local/com2/car':
-			display_topic(rc_list[0])
-		elif rc_list[0] == 'local/com2/web':
-			display_topic(rc_list[0])
+		if cmd_type == 'Topics':
+			display_topic(cmd_tuple[0])
 		# sensorValue1
-		elif rc_list[0] == 'LIDAR':
-			msg_name = rc_list[0]
+		elif cmd_type == 'SensorValue1':
+			msg_name = cmd_tuple[0]
 			msg_type = 1
 			display_data()
-		elif rc_list[0] == 'Humidity':
-			msg_name = rc_list[0]
-			msg_type = 1
-			display_data()
-		elif rc_list[0] == 'SteeringAngle':
-			msg_name = rc_list[0]
-			msg_type = 1
-			display_data()
-		elif rc_list[0] == 'Temperature':
-			msg_name = rc_list[0]
-			msg_type = 1
-			display_data()
-		elif rc_list[0] == 'Speed':
-			msg_name = rc_list[0]
-			msg_type = 1
-			display_data()
-		elif rc_list[0] == 'Altimeter':
-			msg_name = rc_list[0]
-			msg_type = 1
-			display_data()
-		elif rc_list[0] == 'Acceleration':
-			msg_name = rc_list[0]
+		# sensorValue3
+		elif cmd_type == 'SensorValue3':
+			msg_name = cmd_tuple[0]
 			msg_type = 3
-			value3_type = rc_list[1]
+			value3_type = cmd_tuple[1]
 			display_data()
-		elif rc_list[0] == 'Magnetometer':
-			msg_name = rc_list[0]
-			msg_type = 3
-			value3_type = rc_list[1]
-			display_data()
-		elif rc_list[0] == 'Gyro':
-			msg_name = rc_list[0]
-			msg_type = 3
-			value3_type = rc_list[1]
-			display_data()
-		# delete list items
-		del rc_list
+
