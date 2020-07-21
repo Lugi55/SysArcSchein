@@ -7,7 +7,7 @@
 |          |SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|
 |:--------:|:--------:|:-----:|:--------:|:---------------:|:------:|
 |language  |Python3   |Python3|Python3   |Python3          |Python2 |
-|nicenes   |-10       |0      |10        |-10              |0       |
+|niceness   |-10       |0      |10        |-10              |0       |
 |critical  |x         |       |          |x                |        |
 
 Nicenes is a value to determinite the priority of python tasks. 
@@ -206,4 +206,4 @@ For infos go to [Tasks](#Tasks)
 |           |SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|TestTask|TestRFID|Doku |Präsentation|WebCar Interface|sum|
 |:---------:|:--------:|:-----:|:--------:|:---------------:|:------:|:------:|:------:|:---:|:----------:|:--------------:|:---:|
 |Luginsland |10h        |2h     |5h        |                 |3h      |        |3h      |6h   |3h          |4h              |50h
-|Casagranda |          |15h    |          |20h              |        |6h      |1h      |1h   |5h          |4h              |50h
+|Casagranda |          |18h    |          |15h              |4h       |2h      |      |1h   |3h          |4h              |54h
