@@ -86,6 +86,7 @@ For example the updaterates of the **SensorTask** can be altered by changing var
 
 ## IPC
 For the local IPC mqtt is used.
+<br />
 **local topics:**
 ``<local>/sensor``
 ``<local>/com2/car``
@@ -115,11 +116,12 @@ There fore an own Task is used.
 The **CommunicationTask** is responsible for the connection between local and global and buffering the output.
 Over the global topics standardized json frames are transmited.
 
-
+<br />
 **global topics:**
 ``<V3>/sensor``
 ``<V3>/com2/web``
 ``<V3>/com2/car``
+<br />
 
 ### Json Sensor Frame
 With this frame sensor values are transmited.
@@ -169,7 +171,9 @@ Main use is for tranmitting a tockenID for the login over the topic ``<V3>/com2/
 ```
 The following swquence diagramm shows the communication between web and car.
 For a login logout procedure this frame is transmitted over the topic ``<V3>/com2/car``
+<br /><br />
 <img src="/images/WebCarInterface.png" alt="drawing" width="500"/>
+<br /><br />
 
 ## Python requirements
 folowing modules are needed.
