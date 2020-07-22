@@ -85,14 +85,14 @@ The python module ``constants.py`` is used to store values witch are used in mul
 For example the updaterates of the **SensorTask** can be altered by changing variables here.
 
 ## IPC
-For the local IPC mqtt is used.
-<br />
-**local topics:**
+
+### local topics
 ``<local>/sensor``
 ``<local>/com2/car``
 ``<local>/com2/web``
 ``<local>/RFID``
 <br />
+For the local IPC mqtt is used.
 The communication to the web also uses mqtt.
 The global topics and local topics are almost the same.
 Also messages trasmited over these topics are equal.
@@ -116,12 +116,12 @@ There fore an own Task is used.
 The **CommunicationTask** is responsible for the connection between local and global and buffering the output.
 Over the global topics standardized json frames are transmited.
 
-<br />
-**global topics:**
+
+## global topics:
 ``<V3>/sensor``
 ``<V3>/com2/web``
 ``<V3>/com2/car``
-<br />
+
 
 ### Json Sensor Frame
 With this frame sensor values are transmited.
@@ -145,7 +145,7 @@ With this frame sensor values are transmited.
 
 With this Frame the communication to the car from the web is handeld.
 It is needed for the login procedure.
-The topic ``<V3>/sensor`` is used for transmiting the frame.
+The topic ``<V3>/sensor`` is used for transmitting the frame.
 ```json
 {
 "timestamp":"number",
