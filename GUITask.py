@@ -347,7 +347,7 @@ if __name__ == '__main__':
 	# init logging module
 	logging.basicConfig(filename='logFile.log', format='%(asctime)s %(message)s', level=logging.DEBUG)
 	# define os priority
-	niceValue = os.nice(10)
+	niceValue = os.nice(constants.GUITaskNiceness)
 	logging.info('GUITask\t\tniceValue:%s', niceValue)
 	# GUITask obj
 	gui = GUITask()
