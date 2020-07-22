@@ -117,7 +117,7 @@ The **CommunicationTask** is responsible for the connection between local and gl
 Over the global topics standardized json frames are transmited.
 
 
-## global topics:
+### global topics:
 ``<V3>/sensor``
 ``<V3>/com2/web``
 ``<V3>/com2/car``
