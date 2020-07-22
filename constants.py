@@ -1,6 +1,6 @@
 # sensor task parameter
-measurementPeriodLogin = 0.1
-measurementPeriodLogout = 1
+measurementPeriodLogin = 0.5
+measurementPeriodLogout = 5
 
 # communication task parameter
 sensorBufferSize = 100
