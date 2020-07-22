@@ -1,6 +1,6 @@
 # sensor task parameter
-measurementPeriodLogin = 0.5
-measurementPeriodLogout = 5
+measurementPeriodLogin = 0.1
+measurementPeriodLogout = 1
 
 # communication task parameter
 sensorBufferSize = 100
@@ -33,3 +33,11 @@ extern_host             = '192.168.200.165'
 extern_port             = 8883
 extern_user             = 'V3'
 extern_password         = 'DE5' 
+
+SensorTaskNiceness = -15
+GUITaskNiceness = 0
+LoggerTaskNiceness = 5
+CommunicationTaskNiceness = 0
+RFIDTaskNiceness = 0
+
+
