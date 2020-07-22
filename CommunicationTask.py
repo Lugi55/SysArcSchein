@@ -259,7 +259,7 @@ def signalHandler(sig,frame):
 
 if __name__ == "__main__":
 	#define os priority
-	niceValue = os.nice(0)
+	niceValue = os.nice(constants.CommunicationTaskNiceness)
 	#init logging module
 	logging.basicConfig(filename='logFile.log',format='%(asctime)s %(message)s',level=logging.DEBUG)
 	logging.info('CommunicationTask\tniceValue:%s',niceValue)
