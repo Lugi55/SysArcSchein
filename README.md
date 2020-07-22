@@ -8,7 +8,7 @@
 |:--------:|:--------:|:-----:|:--------:|:---------------:|:------:|
 |language  |Python3   |Python3|Python3   |Python3          |Python2 |
 |niceness   |-10       |0      |5        |0              |0       |
-|critical  |x         |       |          |                |        |
+|critical  |x         |       |          |x              |        |
 
 Nicenes is a value to determinite the priority of python tasks. 
 A negative value means a task with high priority.
