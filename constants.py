@@ -34,6 +34,7 @@ extern_port             = 8883
 extern_user             = 'V3'
 extern_password         = 'DE5' 
 
+# niceness
 SensorTaskNiceness = -15
 GUITaskNiceness = 0
 LoggerTaskNiceness = 5

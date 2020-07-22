@@ -140,7 +140,7 @@ class GUImessages:
 	def display_topic(self, topic):
 		# clear terminal
 		os.system('clear')
-		print("Press ENTER to return to GUI!\n")
+		print("Press ENTER to return to menu!\n")
 		self._client.subscribe(topic, qos=0)
 		self._client.loop_start()
 		input()
@@ -153,7 +153,7 @@ class GUImessages:
 		self.__value3_type = value3_type
 		# clear terminal
 		os.system('clear')
-		print("Press ENTER to return to GUI!\n")
+		print("Press ENTER to return to menu!\n")
 		self._client.subscribe(constants.local_sensor_topic, qos=0)
 		self._client.loop_start()
 		input()
@@ -270,6 +270,10 @@ class GUITask:
 	def get_finish(self):
 		with lock:
 			return self.__Finish
+	
+	def set_finish(self, finish ):
+		with lock:
+			self.__Finish = finish
 
 	def guiTask(self):
 		# wait for LoginStatusTask
@@ -323,12 +327,12 @@ class LoginStatusTask():
 		except:
 			logging.info('GUITask\t\tabort: no user.txt')
 			print("abort: no user.txt")
-			sys.exit(1)
+			gui.set_finish(True)
 		user_s = user_file.read()
 		if user_s != '':
 			user_data = json.loads(user_s)
 			try:
-				if user_data["login"] == "True":
+				if user_data["login"] == True:
 					# set login_status and return user name
 					return (user_data['user']['userName'], True)
 			except:
