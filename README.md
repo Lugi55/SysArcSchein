@@ -179,21 +179,25 @@ folowing modules are needed.
 ## Mqtt requirements
 paho is needed 
 <br />
-link to guide
+link to [mqtt guide](https://tutorials-raspberrypi.de/datenaustausch-raspberry-pi-mqtt-broker-client/)
 
 ## IMU requirements
 In the directory ``/IMU`` the libary for the sensor can be found.
 I2C is needed for the communication.
 <br />
-link to guide
+link to [I2C guide](https://tutorials-raspberrypi.de/datenaustausch-raspberry-pi-mqtt-broker-client/)
+<br />
+link to [altimu10v5 library](https://github.com/SvetoslavKuzmanov/altimu10v5)
 
 ## RFID requirements
-the python file ``balbal`` implements the funktion for the RFID 
+the python file ``MFRC522.py`` implements the funktion for the RFID 
 SPI is needed for the communication.
 <br />
-link to guide
+link to [MFRC522 library](https://github.com/mxgxw/MFRC522-python)
+<br />
+link to [spi guide](https://codingworld.io/project/spi-aktivieren)
 
-## Guide
+## start guide
 To execude a task use ``python3 <TaskName>`` or ``python2 <TaskName>``.
 <br /><br />
 For task with a negative niceness value ``sudo`` is needed.
