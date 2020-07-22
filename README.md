@@ -120,8 +120,6 @@ Over the global topics standardized json frames are transmited.
 ``<V3>/com2/web``
 ``<V3>/com2/car``
 
-
-
 ### Json Sensor Frame
 With this frame sensor values are transmited.
 ```json
@@ -142,9 +140,9 @@ With this frame sensor values are transmited.
 }
 ```
 
-### Json com2car Frame
 With this Frame the communication to the car from the web is handeld.
-It is needed for the login procedure. 
+It is needed for the login procedure.
+The topic ``<V3>/sensor`` is used for transmiting the frame.
 ```json
 {
 "timestamp":"number",
@@ -158,9 +156,9 @@ It is needed for the login procedure.
 	}
 }
 ```
-### Json com2web Frame
 With this frame the communication to the web from the car is handeld.
-Main use is for tranmitting a tockenID for the login.
+Main use is for tranmitting a tockenID for the login over the topic ``<V3>/com2/web``.
+
 ```json
 {
 "timestamp":"number",
@@ -168,9 +166,8 @@ Main use is for tranmitting a tockenID for the login.
 "login":"bool"
 }
 ```
-
-## Car Web Interface sequence diagram
 The following swquence diagramm shows the communication between web and car.
+For a login logout procedure this frame is transmitted over the topic ``<V3>/com2/car``
 <img src="/images/WebCarInterface.png" alt="drawing" width="500"/>
 
 ## Python requirements
