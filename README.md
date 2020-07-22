@@ -86,11 +86,12 @@ For example the updaterates of the **SensorTask** can be altered by changing var
 
 ## IPC
 For the local IPC mqtt is used.
-#### local topics
+**local topics:**
 ``<local>/sensor``
 ``<local>/com2/car``
 ``<local>/com2/web``
 ``<local>/RFID``
+<br />
 The communication to the web also uses mqtt.
 The global topics and local topics are almost the same.
 Also messages trasmited over these topics are equal.
@@ -115,7 +116,7 @@ The **CommunicationTask** is responsible for the connection between local and gl
 Over the global topics standardized json frames are transmited.
 
 
-#### global topics
+**global topics:**
 ``<V3>/sensor``
 ``<V3>/com2/web``
 ``<V3>/com2/car``
