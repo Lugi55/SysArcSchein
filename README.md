@@ -7,7 +7,7 @@
 |          |SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|
 |:--------:|:--------:|:-----:|:--------:|:---------------:|:------:|
 |language  |Python3   |Python3|Python3   |Python3          |Python2 |
-|niceness   |-10       |0      |5        |0              |0       |
+|niceness   |-15       |0      |5        |0              |0       |
 |critical  |x         |       |          |x              |        |
 
 Nicenes is a value to determinite the priority of python tasks. 
