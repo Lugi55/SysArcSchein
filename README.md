@@ -199,9 +199,9 @@ link to [spi guide](https://codingworld.io/project/spi-aktivieren)
 
 ## start guide
 To execude a task use ``python3 <TaskName>`` or ``python2 <TaskName>``.
-<br /><br />
+<br />
 For task with a negative niceness value ``sudo`` is needed.
-<br /><br />
+<br />
 All critcal Task have to run to ensure functionality.
 All non critical Task can be started and determied at any time.
 For infos go to [Tasks](#Tasks)
