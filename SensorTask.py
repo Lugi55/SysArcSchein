@@ -20,7 +20,7 @@ def main():
 	logging.info('SensorTask\t\tstart')
 
 	#defien os priority
-	niceValue = os.nice(10)
+	niceValue = os.nice(constants.SensorTaskNiceness)
 	logging.info('SensorTask\t\tniceValue:%s',niceValue)
 
 	#register signalHandler

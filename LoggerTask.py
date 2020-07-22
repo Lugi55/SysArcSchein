@@ -14,7 +14,7 @@ def main():
 	logging.info('LoggerTask\t\tstart')
 
 	#define os priority
-	niceValue = os.nice(0)
+	niceValue = os.nice(constants.LoggerTaskNiceness)
 	logging.info('LoggerTask\t\tniceValue:%s',niceValue)
 
 	#register signalHandler
