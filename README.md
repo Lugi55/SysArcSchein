@@ -1,7 +1,7 @@
 # SysArc
 
 ## Overview
-![la lune](/images/UML.jpg "UML")
+![UML](/images/UML.jpg "UML")
 
 ## <a name="Tasks"></a> Tasks
 |          |SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|
