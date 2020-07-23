@@ -1,7 +1,7 @@
 # SysArc
 
 ## Overview
-<img src="/images/UML.png" alt="drawing" width="300"/>
+<img src="/images/UML.png" alt="drawing" width="500"/>
 
 ## <a name="Tasks"></a> Tasks
 |          |SensorTask|GUITask|LoggerTask|CommunicationTask|RFIDTask|
