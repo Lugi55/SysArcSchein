@@ -45,9 +45,9 @@ The following diagramm shows the callback function triggerd by the topic ``<loca
 The folloing table shows witch sensor value is puplished and the update rate when a user is logged in or not.
 <br /><br />
 |status|LIDAR|Humidity|SteeringAngle|Temperature|Speed|Altimeter|Acceleration|Magnetometer|Gyro|Measurement Period|
-|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|:----:|----:|
-|login|x|x|x|x|x|x|x|x|x|0.5s|
-|logout||x||x|||x||x|5s|
+|:----:|:---:|:------:|:-----------:|:---------:|:---:|:-------:|:----------:|:----------:|:--:|-----------------:|
+|login |x    |x       |x            |x          |x    |x        |x           |x           |x   |0.5s              |
+|logout|     |x       |             |x          |     |         |x           |            |x   |5s                |
 
 ## GUITask
 
