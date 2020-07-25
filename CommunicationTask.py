@@ -81,8 +81,6 @@ class InternCom(Communication):
 		self._com2_web_topic = constants.local_com2_web_topic
 		self._sensor_topic = constants.local_sensor_topic
 		self.__RFID_topic = constants.local_RFID_topic
-		
-		self.__overflow_file = open('LoggerData/overflow.log','a')
 
 	def init_mqtt_client(self):
 		self._client = paho.Client()
@@ -115,8 +113,7 @@ class InternCom(Communication):
 			if length >= constants.sensorBufferSize:
 				# delete all elements in queue
 				self._sensor_buf.queue.clear()
-				self.__overflow_file.write("deleted sensor messages = "+str(length)+"\n")
-				self._logger_function("buffer: deleted messages = "+str(length))
+				self._logger_function("sensor buffer overflow: deleted messages = "+str(length))
 
 	def _on_com2_web(self, client, userdata, msg):
 		# blocking queque access

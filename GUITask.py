@@ -25,7 +25,7 @@ class GUIMenu:
 		try:
 			param_file = open("gui_params.json")
 		except:
-			logging.info('GUITask\t\tabort: no gui_params.json')
+			logging.info('GUITask\t\t\tabort: no gui_params.json')
 			print("abort: no gui_params.json")
 			sys.exit(1)
 		self.__menu_data = json.load(param_file)
@@ -165,7 +165,7 @@ class GUImessages:
 
 
 	def _on_subscribe(self, client, userdata, mid, granted_qos):
-		logging.info('GUITask\t\tSubscribed to SensorTask')
+		logging.info('GUITask\t\t\tSubscribed to SensorTask')
 
 	def _on_unsubscribe(self, client, userdata, mid):
 		pass
@@ -255,7 +255,7 @@ class GUITask:
 	__Finish = False
 
 	def __init__(self):
-		logging.info('GUITask\t\tstart')
+		logging.info('GUITask\t\t\tstart')
 		self.__gui_menu = GUIMenu()
 		self.__gui_messages = GUImessages()
 
@@ -305,7 +305,7 @@ class LoginStatusTask():
 
 	def __init__(self, gui):
 		self.__gui = gui
-		logging.info('GUITask\t\tloginStatusTask started')
+		logging.info('GUITask\t\t\tloginStatusTask started')
 
 	def check_login_status(self):
 		# loop forever
@@ -325,7 +325,7 @@ class LoginStatusTask():
 		try:	
 			user_file = open("user.txt")
 		except:
-			logging.info('GUITask\t\tabort: no user.txt')
+			logging.info('GUITask\t\t\tabort: no user.txt')
 			print("abort: no user.txt")
 			gui.set_finish(True)
 		user_s = user_file.read()
@@ -348,7 +348,7 @@ if __name__ == '__main__':
 	logging.basicConfig(filename='logFile.log', format='%(asctime)s %(message)s', level=logging.DEBUG)
 	# define os priority
 	niceValue = os.nice(constants.GUITaskNiceness)
-	logging.info('GUITask\t\tniceValue:%s', niceValue)
+	logging.info('GUITask\t\t\tniceValue:%s', niceValue)
 	# GUITask obj
 	gui = GUITask()
 	# LoginStatusTask obj
@@ -363,5 +363,5 @@ if __name__ == '__main__':
 
 	t1.join()
 	t2.join()
-	logging.info('GUITask\t\tstopped')
+	logging.info('GUITask\t\t\tstopped')
 
